@@ -1,0 +1,9 @@
+[submodule "modules/vpc"]
+	path = modules/vpc
+	url = git@github.com:terraform-aws-modules/terraform-aws-vpc.git
+[submodule "modules/rds"]
+	path = modules/rds
+	url = git@github.com:terraform-aws-modules/terraform-aws-rds.git
+[submodule "modules/asg"]
+	path = modules/asg
+	url = git@github.com:terraform-aws-modules/terraform-aws-autoscaling.git
