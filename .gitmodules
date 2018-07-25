@@ -7,3 +7,6 @@
 [submodule "modules/asg"]
 	path = modules/asg
 	url = git@github.com:terraform-aws-modules/terraform-aws-autoscaling.git
+[submodule "modules/sg"]
+	path = modules/sg
+	url = git@github.com:terraform-aws-modules/terraform-aws-security-group.git
