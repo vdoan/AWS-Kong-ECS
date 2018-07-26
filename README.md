@@ -2,7 +2,7 @@
 
 Terraform to deploy [Kong](https://konghq.com/kong-community-edition/) to AWS
 
-(https://pbs.twimg.com/profile_images/476765659670384641/JkbHgnsy.png) + (https://res-5.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco/ybimx0g1qmd9ynruwosf)
+![AWS](https://pbs.twimg.com/profile_images/476765659670384641/JkbHgnsy.png) + ![Kong](https://res-5.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco/ybimx0g1qmd9ynruwosf)
 
 # Functionality
 
