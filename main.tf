@@ -57,7 +57,7 @@ module "ecs_sg" {
     }
     # TODO 8001 admin from bastion only
   ]
-  gress_with_cidr_blocks = [
+  egress_with_cidr_blocks = [
     {
       description = "all outbound"
       from_port   = 0
@@ -102,7 +102,12 @@ module "ecs_cluster_iam" {
 data "template_file" "ecs_user_data" {
   template = <<EOF
 #!/bin/bash
-echo ECS_CLUSTER='${var.app_name}' > /etc/ecs/ecs.config
+cat << EOF_CONFIG > /etc/ecs.config
+ECS_CLUSTER='${var.app_name}'
+ECS_DISABLE_PRIVILEGED=true
+ECS_ENABLE_TASK_IAM_ROLE=true
+ECS_AWSVPC_BLOCK_IMDS=true
+EOF_CONFIG
 EOF
 }
 resource "aws_ecs_cluster" "main" {
@@ -180,4 +185,74 @@ resource "aws_ecs_service" "main" {
   cluster           = "${aws_ecs_cluster.main.id}"
   task_definition   = "${aws_ecs_task_definition.main.arn}"
   desired_count     = "${var.ecs_service_desired_count}"
+}
+
+
+# RDS
+module "rds_sg" {
+  source      = "modules/sg"
+  name        = "${var.app_name}-RDS-SG"
+  vpc_id      = "${module.vpc.vpc_id}"
+
+  # TODO BAD BAD VERY BAD
+  # This was failing with "value of 'count' cannot be computed" and couldn't esaily figure out why
+  # appears that we can't use dynamic-generated cidr or SGs in here, else "count" at plan-time fails ....
+  # https://github.com/hashicorp/terraform/issues/12570
+  #ingress_with_source_security_group_id = [
+  #  {
+  #    description               = "postgres-access"
+  #    protocol                  = "tcp"
+  #    from_port                 = "${var.db_port}"
+  #    to_port                   = "${var.db_port}"
+  #    source_security_group_id  = "${module.ecs_sg.this_security_group_id}"
+  #  }
+  #]
+
+  # TODO BAD BAD VERY BAD
+  # No igw = no public access, but still not great
+  ingress_with_cidr_blocks = [
+    {
+      description               = "postgres-access"
+      protocol                  = "tcp"
+      from_port                 = "5432"
+      to_port                   = "5432"
+      cidr_blocks               = "0.0.0.0/0"
+    }
+  ]
+
+}
+resource "aws_db_parameter_group" "main" {
+  name    = "postgres"
+  family  = "${var.db_engine}${var.db_engine_version}"
+
+  parameter {
+    name         = "autovacuum"
+    value        = "1"
+    apply_method = "pending-reboot"
+  }
+}
+
+module "rds" {
+  source                    = "modules/rds"
+  identifier                = "${lower(var.app_name)}"  # rds identifier must be lowercase
+  name                      = "${var.app_name}"
+
+  engine                    = "${var.db_engine}"
+  engine_version            = "${var.db_engine_version}"
+  port                      = "${var.db_port}"
+
+  instance_class            = "${var.db_instance_class}"
+  allocated_storage         = "${var.db_allocated_storage_gb}"
+
+  maintenance_window        = "${var.db_maintenance_window}"
+  backup_window             = "${var.db_backup_window}"
+
+  vpc_security_group_ids    = ["${module.rds_sg.this_security_group_id}"]
+  subnet_ids                = "${module.vpc.private_subnets}"
+  multi_az                  = true
+
+  parameter_group_name      = "${aws_db_parameter_group.main.name}"
+
+  username                  = "${var.db_username}"
+  password                  = "${var.db_password}"
 }
