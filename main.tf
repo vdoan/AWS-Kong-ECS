@@ -170,10 +170,10 @@ resource "aws_ecs_task_definition" "main" {
   container_definitions = <<EOF
 [
   {
-    "Name": "${var.app_name}",
-    "Image": "${var.app_image}",
-    "MemoryReservation": ${var.container_memory_reservation},
-    "PortMappings": [
+    "name": "${var.app_name}",
+    "image": "${var.app_image}",
+    "memoryReservation": ${var.container_memory_reservation},
+    "portMappings": [
       {
         "ContainerPort": 8443,
         "Protocol": "tcp"
@@ -182,6 +182,24 @@ resource "aws_ecs_task_definition" "main" {
         "ContainerPort": 8000,
         "Protocol": "tcp"
       }
+    ],
+    environment: [
+      {
+        "name"  : "ssm_parameter_name_db_username",
+        "value" : "${local.ssm_parameter_name_db_username}"
+      },
+      {
+        "name"  : "ssm_parameter_name_db_password",
+        "value" : "${local.ssm_parameter_name_db_password}"
+      },
+      {
+        "name"  : "db_engine",
+        "value" : "${var.db_engine}"
+      },
+      {
+        "name"  : "db_host",
+        "value" : "${module.rds.this_db_instance_endpoint}"
+      },
     ]
   }
 ]
