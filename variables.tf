@@ -17,7 +17,7 @@ locals {
   ssm_parameter_name_db_username = "${var.ssm_parameter_name_prefix}/db_username"
   ssm_parameter_name_db_password = "${var.ssm_parameter_name_prefix}/db_password"
   ssm_parameter_name_db_engine = "${var.ssm_parameter_name_prefix}/db_engine"
-  ssm_parameter_name_db_name = "${var.ssm_parameter_name_prefix}/db_name"
+  ssm_parameter_name_db_host = "${var.ssm_parameter_name_prefix}/db_host"
 }
  
  # ECS
@@ -25,7 +25,7 @@ variable "ecs_cluster_instance_type" {
   default = "t2.micro"
 }
 variable "app_image" {
-  default = "kong:0.14.0-alpine"
+  default = "rdkls/kong_ssm:latest"
 }
 variable "ecs_service_desired_count" {
   default = 1
@@ -39,9 +39,6 @@ variable "db_username" {
   default = "postgres"
 }
 variable "db_password" {
-}
-variable "db_name" {
-  default="kong"
 }
 variable "db_engine" {
   default = "postgres"

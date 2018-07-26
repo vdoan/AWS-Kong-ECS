@@ -183,7 +183,7 @@ resource "aws_ecs_task_definition" "main" {
         "Protocol": "tcp"
       }
     ],
-    environment: [
+    "environment": [
       {
         "name"  : "SSM_PARAMETER_NAME_DB_USERNAME",
         "value" : "${local.ssm_parameter_name_db_username}"
@@ -193,12 +193,12 @@ resource "aws_ecs_task_definition" "main" {
         "value" : "${local.ssm_parameter_name_db_password}"
       },
       {
-        "name"  : "KONG_DATABASE",
-        "value" : "${var.db_engine}"
+        "name"  : "SSM_PARAMETER_NAME_DB_ENGINE",
+        "value" : "${local.ssm_parameter_name_db_engine}"
       },
       {
-        "name"  : "KONG_PG_HOST",
-        "value" : "${module.rds.this_db_instance_endpoint}"
+        "name"  : "SSM_PARAMETER_NAME_DB_HOST",
+        "value" : "${local.ssm_parameter_name_db_host}"
       }
     ]
   }
@@ -299,8 +299,8 @@ resource "aws_ssm_parameter" "db_engine" {
   value   = "${var.db_engine}"
   type    = "SecureString"
 }
-resource "aws_ssm_parameter" "db_name" {
-  name    = "${local.ssm_parameter_name_db_name}"
-  value   = "${var.db_name}"
+resource "aws_ssm_parameter" "db_host" {
+  name    = "${local.ssm_parameter_name_db_host}"
+  value   = "${module.rds.this_db_instance_endpoint}"
   type    = "SecureString"
 }
