@@ -44,6 +44,3 @@ resource "aws_iam_role_policy" "ecs_task" {
   role      = "${aws_iam_role.ecs_task.id}"
   policy    = "${data.template_file.ecs_task_role_policy.rendered}"
 }
-output "pol" {
-  value = "${data.template_file.ecs_task_role_policy.rendered}"
-}
