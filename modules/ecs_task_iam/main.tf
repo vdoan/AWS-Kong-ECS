@@ -26,8 +26,7 @@ data "template_file" "ecs_task_role_policy" {
     {
       "Effect": "Allow",
       "Action": [
-        "ssm:DescribeParameters",
-        "ssm:GetParameters"
+        "ssm:GetParameter"
       ],
       "Resource": "arn:aws:ssm:$${region}:$${account_id}:parameter$${ssm_parameter_name_prefix}/*"
     }
