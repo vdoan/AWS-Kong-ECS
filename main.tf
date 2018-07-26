@@ -161,10 +161,12 @@ output "ami_id" {
 module "ecs_task_iam" {
   source                      = "modules/ecs_task_iam"
   account_id                  = "${data.aws_caller_identity.current.account_id}"
+  region                      = "${var.region}"
   ssm_parameter_name_prefix   = "${var.ssm_parameter_name_prefix}"
 }
 resource "aws_ecs_task_definition" "main" {
   family        = "${var.app_name}"
+  task_role_arn = "${module.ecs_task_iam.arn}"
   container_definitions = <<EOF
 [
   {
