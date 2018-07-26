@@ -7,21 +7,21 @@ Terraform to deploy [Kong](https://konghq.com/kong-community-edition/) to AWS
 ## DONE
 
 - VPC
-  - Subnets public & private in 3AZs
+  * Subnets public & private in 3AZs
 - SGs for
-  - Kong app (on ecs)
-  - RDS, inbound only from public subnet (issues getting TF to do by SG)
+  * Kong app (on ecs)
+  * RDS, inbound only from public subnet (issues getting TF to do by SG)
 - IAM roles for
-  - ECS instance
-  - ECS service (the running containers themselves, with only SSM read)
+  * ECS instance
+  * ECS service (the running containers themselves, with only SSM read)
 - ECS Cluster
-  - ASG & LC
-  - ECS Instances restricted according to best prac - no privileged containers & no metadata from containers
+  * ASG & LC
+  * ECS Instances restricted according to best prac - no privileged containers & no metadata from containers
 - ECS Service for Kong
-  - TODO rds access
+  * TODO rds access
 - RDS (postgres)
 - SSM Parameter Store
-  - Storing config/secrets (as SecureString)
+  * Storing config/secrets (as SecureString)
 
 ## TODO
 
