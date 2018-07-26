@@ -5,11 +5,11 @@ DONE
 
 - VPC, Subnets, SGs
 - ECS Cluster
+- ECS Service
+- RDS (postgres)
 
 TODO
 
-- ECS Service
-- RDS (postgres)
 - LB
 - Bastion for Kong Admin
 
