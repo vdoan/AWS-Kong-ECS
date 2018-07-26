@@ -37,7 +37,7 @@ Deploy [Kong](https://konghq.com/kong-community-edition/) to AWS, with Postgres,
 
 # Usage
 
-Per standard Terraform best prac - creds expected to be in environment or instance parameter
+Per standard Terraform best prac - creds expected to be in environment OR instance profile
 
 e.g. my dev instance has IAM profile "provisioner" which runs this
 
