@@ -3,6 +3,7 @@ provider "aws" {
 }
   
 data "aws_availability_zones" "available" {}
+data "aws_caller_identity" "current" {}
 
 # VPC
 module "vpc" {
@@ -157,6 +158,11 @@ output "ami_id" {
 }
 
 # ECS Service & Task Definition
+module "ecs_task_iam" {
+  source                      = "modules/ecs_task_iam"
+  account_id                  = "${data.aws_caller_identity.current.account_id}"
+  ssm_parameter_name_prefix   = "${var.ssm_parameter_name_prefix}"
+}
 resource "aws_ecs_task_definition" "main" {
   family        = "${var.app_name}"
   container_definitions = <<EOF
@@ -255,4 +261,26 @@ module "rds" {
 
   username                  = "${var.db_username}"
   password                  = "${var.db_password}"
+}
+
+# Set SSM Parameters
+resource "aws_ssm_parameter" "db_username" {
+  name    = "${local.ssm_parameter_name_db_username}"
+  value   = "${var.db_username}"
+  type    = "SecureString"
+}
+resource "aws_ssm_parameter" "db_password" {
+  name    = "${local.ssm_parameter_name_db_password}"
+  value   = "${var.db_password}"
+  type    = "SecureString"
+}
+resource "aws_ssm_parameter" "db_engine" {
+  name    = "${local.ssm_parameter_name_db_engine}"
+  value   = "${var.db_engine}"
+  type    = "SecureString"
+}
+resource "aws_ssm_parameter" "db_name" {
+  name    = "${local.ssm_parameter_name_db_name}"
+  value   = "${var.db_name}"
+  type    = "SecureString"
 }

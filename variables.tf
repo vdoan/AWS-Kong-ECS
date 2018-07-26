@@ -9,19 +9,16 @@ variable "ssh_key_name" {
 }
 
 # SSM
-variable "ssm_parameter_name_db_username" {
-  default = "/dev/kong/db_username"
+variable "ssm_parameter_name_prefix" {
+  description = "prefix (like path) under which to store SSM parameters"
+  default = "/dev/kong"
 }
-variable "ssm_parameter_name_db_password" {
-  default = "/dev/kong/db_password"
+locals {
+  ssm_parameter_name_db_username = "${var.ssm_parameter_name_prefix}/db_username"
+  ssm_parameter_name_db_password = "${var.ssm_parameter_name_prefix}/db_password"
+  ssm_parameter_name_db_engine = "${var.ssm_parameter_name_prefix}/db_engine"
+  ssm_parameter_name_db_name = "${var.ssm_parameter_name_prefix}/db_name"
 }
-variable "ssm_parameter_name_db_engine" {
-  default = "/dev/kong/db_engine"
-}
-variable "ssm_parameter_name_db_name" {
-  default = "/dev/kong/db_name"
-}
-
  
  # ECS
 variable "ecs_cluster_instance_type" {
