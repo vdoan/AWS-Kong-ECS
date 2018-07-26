@@ -2,7 +2,11 @@
 
 Terraform to deploy [Kong](https://konghq.com/kong-community-edition/) to AWS
 
-![AWS](https://pbs.twimg.com/profile_images/476765659670384641/JkbHgnsy.png) ![Plus](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXkwy0aF04AY4518KijPrsS-7q-TXR0klp31orsq9XpBqQKXCFsg) ![Kong](https://res-5.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco/ybimx0g1qmd9ynruwosf)
+![Terraform](https://www.datocms-assets.com/2885/1506457071-blog-terraform-list.svg)
+![Plus](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXkwy0aF04AY4518KijPrsS-7q-TXR0klp31orsq9XpBqQKXCFsg)
+![AWS](https://pbs.twimg.com/profile_images/476765659670384641/JkbHgnsy.png)
+![Plus](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXkwy0aF04AY4518KijPrsS-7q-TXR0klp31orsq9XpBqQKXCFsg)
+![Kong](https://res-5.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco/ybimx0g1qmd9ynruwosf)
 
 # Functionality
 
