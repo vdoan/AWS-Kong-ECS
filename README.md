@@ -10,6 +10,43 @@ Deploy [Kong](https://konghq.com/kong-community-edition/) to AWS, with Postgres,
 
 # Functionality
 
+## Docker Container
+
+### Configured from SSM Parameters
+
+The standard [Kong docker image](https://hub.docker.com/_/kong/) takes configuration from environment variables. Deploying this would tie Kong's configuration to the task definition which has two main disadvantages:
+
+- Configuration updates require deploying new task definition
+- Secrets must be stored in task definition
+- No canonical secret/config store
+
+For these reasons it was decided to extend the standard Kong 0.14.0-alpine image to optionally take its config from SSM parameters.
+
+This was done by installing awscli, jq and curl in the image, and modifying docker-entrypoint.sh to use these to (if provided) obtain the config and override Kong's default environment variables.
+
+The SSM parameter names are passed in as environment variables at 'docker run' time i.e. container definition (see main.tf resource "aws_ecs_task_definition"). By default these are all SecureStrings nested under prefix "/dev/kong/"
+
+The parameters are set at terraform apply-time - see main.tf e.g. resource "aws_ssm_parameter" "db_username"
+
+### Permissions
+
+This setup also requires that the running container (task) have permission to read and decrypt the SSM Parameters.
+
+This is done using AWS' "task_role" concept, which assigns an IAM role to the task by passing in environment variable "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI", which is used to obtain assumed role for the container.
+
+Such approach means the container instance itself, nor any other container tasks running on same instance, can access these secrets.
+
+This IAM work took quite some time to debug; had to modify entrypoint/command in deployed task definition, to just e.g. "/usr/bin/env", or "/usr/bin/aws ssm get-parameter ..", then ssh to the docker host/container instance and view logs (or via cloudwatch, but that's slower)
+
+The IAM role is created by custom module in modules/ecs_task_iam/main.tf
+
+This module takes variables from the rest of the config (changing e.g. prefix/ssm parameter name in toplevel variables.tf will also update IAM policy as you might hope :), and outputs the task ARN for the task definition to use.
+
+### Registry & Source
+
+The container is hosted on [Docker Hub](https://hub.docker.com/r/rdkls/kong_ssm/), and the source on [BitBucket](https://bitbucket.org/nick_doyle/docker_kong_ssm/)
+
+
 ## Done
 
 - VPC
