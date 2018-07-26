@@ -57,6 +57,8 @@ module "ecs_sg" {
     }
     # TODO 8001 admin from bastion only
   ]
+
+  # Can't just use proto=-1 since the module then opens all ports
   ingress_with_self = [
     {
       description = "kong inter-node comms, tcp"
@@ -73,7 +75,7 @@ module "ecs_sg" {
   ]
 }
 
-# ECS
+# ECS Cluster
 data "aws_ami" "ecs" {
   most_recent = true
   filter {
@@ -85,44 +87,49 @@ data "aws_ami" "ecs" {
     values    = ["amzn-ami-*-amazon-ecs-optimized"]
   }
 }
+module "ecs_cluster_iam" {
+  source = "modules/ecs_cluster_iam"
+}
 
-#module "asg" {
-#  source = "modules/asg"
-#
-#  name = "${var.app_name}-ECS-ASG"
-#
-#  # Launch configuration
-#  lc_name = "${var.app_name}-ECS-LC"
-#
-#  image_id        = "${data.aws_ami.ecs.id}"
-#  instance_type   = "${var.ecs_cluster_instance_type}"
-#  #security_groups = ["sg-12345678"]
-#
-#  # block devices - use defaults
-#
-#  # Auto scaling group
-#  asg_name                  = "${var.app_name}-ECS-ASG"
-#  vpc_zone_identifier       = ["subnet-1235678", "subnet-87654321"]
-#  health_check_type         = "EC2"
-#  min_size                  = 1
-#  max_size                  = 2
-#  desired_capacity          = 1
-#  wait_for_capacity_timeout = 0
-#
-#  tags = [
-#    {
-#      key                 = "Environment"
-#      value               = "dev"
-#      propagate_at_launch = true
-#    },
-#    {
-#      key                 = "Project"
-#      value               = "kong demo"
-#      propagate_at_launch = true
-#    },
-#  ]
-#}
+module "asg" {
+  source = "modules/asg"
 
+  name = "${var.app_name}-ECS-ASG"
+
+  # Launch configuration
+  lc_name = "${var.app_name}-ECS-LC"
+
+  image_id        = "${data.aws_ami.ecs.id}"
+  instance_type   = "${var.ecs_cluster_instance_type}"
+  security_groups = ["${module.ecs_sg.this_security_group_id}"]
+
+  # block devices - use defaults
+
+  # Auto scaling group
+  asg_name                  = "${var.app_name}-ECS-ASG"
+  vpc_zone_identifier       = ["${module.vpc.public_subnets}"]
+  iam_instance_profile      = "${module.ecs_cluster_iam.ecs_instance_profile_id}"
+  health_check_type         = "EC2"
+  min_size                  = 1
+  max_size                  = 2
+  desired_capacity          = 1
+  wait_for_capacity_timeout = 0
+
+  tags = [
+    {
+      key                 = "Environment"
+      value               = "dev"
+      propagate_at_launch = true
+    },
+    {
+      key                 = "Project"
+      value               = "kong demo"
+      propagate_at_launch = true
+    },
+  ]
+}
 output "ami_id" {
   value = "${data.aws_ami.ecs.id}"
 }
+
+# ECS Service & Task Definition
