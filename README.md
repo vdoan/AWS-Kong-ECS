@@ -10,6 +10,20 @@ Deploy [Kong](https://konghq.com/kong-community-edition/) to AWS, with Postgres,
 
 # Functionality
 
+## Bastion Host
+
+Admin interfaces should arguably only ever be available over VPN or via bastion. To this end a basic bastion is provided, see bastion.tf.
+
+bastion host is not (currently) HA, sits in public subnet 1.
+
+To access kong admin api:
+
+`ssh -N -L 8001:8001 ubuntu@52.64.239.9`
+
+(where '52.64.239.9' is IP of the bastion host)
+
+Then connect to localhost:8001
+
 ## Docker Container
 
 ### Configured from SSM Parameters
@@ -40,7 +54,7 @@ This IAM work took quite some time to debug; had to modify entrypoint/command in
 
 The IAM role is created by custom module in modules/ecs_task_iam/main.tf
 
-This module takes variables from the rest of the config (changing e.g. prefix/ssm parameter name in toplevel variables.tf will also update IAM policy as you might hope :), and outputs the task ARN for the task definition to use.
+This module takes variables from the rest of the config (changing e.g. prefix/ssm parameter name in toplevel variables.tf will also update IAM policy as you might hope :), and outputs the role ARN for the task definition to use.
 
 ### Registry & Source
 

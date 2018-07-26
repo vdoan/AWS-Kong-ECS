@@ -49,6 +49,9 @@ variable "db_engine_version" {
 variable "db_instance_class" {
   default = "db.t2.micro"
 }
+variable "bastion_instance_class" {
+  default = "t2.micro"
+}
 variable "db_port" {
   default = 5432
 }
@@ -60,4 +63,9 @@ variable "db_backup_window" {
 }
 variable "db_allocated_storage_gb" {
   default = 5
+}
+
+# Kong
+variable "kong_port_admin" {
+  default = "8001"
 }

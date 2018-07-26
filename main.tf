@@ -55,8 +55,15 @@ module "ecs_sg" {
       from_port   = 8443
       to_port     = 8443
       cidr_blocks = "0.0.0.0/0"
+    },
+    # Ideally this would be from bastion SG but couldn't get that to work so ip-based for now ...
+    {
+      description = "kong admin"
+      protocol    = "tcp"
+      from_port   = ${var.kong_port_admin}
+      to_port     = ${var.kong_port_admin}
+      cidr_blocks = "${aws_instance.bastion.public_ip}/0"
     }
-    # TODO 8001 admin from bastion only
   ]
   egress_with_cidr_blocks = [
     {
@@ -152,9 +159,6 @@ module "asg" {
       propagate_at_launch = true
     },
   ]
-}
-output "ami_id" {
-  value = "${data.aws_ami.ecs.id}"
 }
 
 # ECS Service & Task Definition
@@ -303,4 +307,12 @@ resource "aws_ssm_parameter" "db_host" {
   name    = "${local.ssm_parameter_name_db_host}"
   value   = "${module.rds.this_db_instance_endpoint}"
   type    = "SecureString"
+}
+
+
+output "ami_id" {
+  value = "${data.aws_ami.ecs.id}"
+}
+output "bastion_ssh_command_to_kong_admin" {
+  value = "ssh -N -L ${var.kong_port_admin}:${
 }
