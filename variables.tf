@@ -39,7 +39,6 @@ variable "db_username" {
   default = "postgres"
 }
 variable "db_password" {
-  default="blablabla"
 }
 variable "db_name" {
   default="kong"
