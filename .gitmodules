@@ -10,3 +10,6 @@
 [submodule "modules/sg"]
 	path = modules/sg
 	url = git@github.com:terraform-aws-modules/terraform-aws-security-group.git
+[submodule "modules/iam"]
+	path = modules/iam
+	url = git@github.com:terraform-aws-modules/terraform-aws-iam.git
