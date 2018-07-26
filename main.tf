@@ -185,21 +185,21 @@ resource "aws_ecs_task_definition" "main" {
     ],
     environment: [
       {
-        "name"  : "ssm_parameter_name_db_username",
+        "name"  : "SSM_PARAMETER_NAME_DB_USERNAME",
         "value" : "${local.ssm_parameter_name_db_username}"
       },
       {
-        "name"  : "ssm_parameter_name_db_password",
+        "name"  : "SSM_PARAMETER_NAME_DB_PASSWORD",
         "value" : "${local.ssm_parameter_name_db_password}"
       },
       {
-        "name"  : "db_engine",
+        "name"  : "KONG_DATABASE",
         "value" : "${var.db_engine}"
       },
       {
-        "name"  : "db_host",
+        "name"  : "KONG_PG_HOST",
         "value" : "${module.rds.this_db_instance_endpoint}"
-      },
+      }
     ]
   }
 ]
