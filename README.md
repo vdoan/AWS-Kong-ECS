@@ -1,6 +1,7 @@
 # Overview
 
-Terraform to deploy [Kong](https://konghq.com/kong-community-edition/) to AWS
+Terraform to deploy [Kong](https://konghq.com/kong-community-edition/) to AWS, with Postgres, in highly-available multi-AZ and secure config
+
 
 ![Kong](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp1iZGiJrx-zPtYghNjdn8yNjIHDsynMoX4ss6LKeMai1k1RDK)
 ![Plus](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSni-KOe3lGmossBj8fiAN9k_yMRs3ueCcp81iSgdwndeuguTvzLQ)
