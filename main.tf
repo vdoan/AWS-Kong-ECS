@@ -103,7 +103,7 @@ module "ecs_cluster_iam" {
 data "template_file" "ecs_user_data" {
   template = <<EOF
 #!/bin/bash
-cat << EOF_CONFIG > /etc/ecs.config
+cat << EOF_CONFIG > /etc/ecs/ecs.config
 ECS_CLUSTER='${var.app_name}'
 ECS_DISABLE_PRIVILEGED=true
 ECS_ENABLE_TASK_IAM_ROLE=true
