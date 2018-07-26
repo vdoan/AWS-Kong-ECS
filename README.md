@@ -1,13 +1,12 @@
 # Overview
 
-Terraform to deploy [Kong](https://konghq.com/kong-community-edition/) to AWS, with Postgres, in highly-available multi-AZ and secure config
-
+Deploy [Kong](https://konghq.com/kong-community-edition/) to AWS, with Postgres, in highly-available multi-AZ and secure config
 
 ![Kong](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp1iZGiJrx-zPtYghNjdn8yNjIHDsynMoX4ss6LKeMai1k1RDK)
 ![Plus](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSni-KOe3lGmossBj8fiAN9k_yMRs3ueCcp81iSgdwndeuguTvzLQ)
-![Terraform](https://raw.githubusercontent.com/mauve/vscode-terraform/master/terraform.png)
 ![AWS](https://amazonwebservices.gallerycdn.vsassets.io/extensions/amazonwebservices/aws-vsts-tools/1.0.21/1521739315168/Microsoft.VisualStudio.Services.Icons.Default)
 ![Plus](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSni-KOe3lGmossBj8fiAN9k_yMRs3ueCcp81iSgdwndeuguTvzLQ)
+![Terraform](https://raw.githubusercontent.com/mauve/vscode-terraform/master/terraform.png)
 
 # Functionality
 
