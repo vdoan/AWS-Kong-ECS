@@ -45,15 +45,15 @@ module "ecs_sg" {
     {
       description = "http"
       protocol    = "tcp"
-      from_port   = 8000
-      to_port     = 8000
+      from_port   = "${var.kong_port_http}"
+      to_port     = "${var.kong_port_http}"
       cidr_blocks = "0.0.0.0/0"
     },
     {
       description = "https"
       protocol    = "tcp"
-      from_port   = 8443
-      to_port     = 8443
+      from_port   = "${var.kong_port_https}"
+      to_port     = "${var.kong_port_https}"
       cidr_blocks = "0.0.0.0/0"
     }
     # TODO 8001 admin from bastion only
@@ -171,15 +171,16 @@ resource "aws_ecs_task_definition" "main" {
 [
   {
     "name": "${var.app_name}",
+    "container_name": "${var.app_name}",
     "image": "${var.app_image}",
     "memoryReservation": ${var.container_memory_reservation},
     "portMappings": [
       {
-        "ContainerPort": 8443,
+        "ContainerPort": ${var.kong_port_http},
         "Protocol": "tcp"
       },
       {
-        "ContainerPort": 8000,
+        "ContainerPort": ${var.kong_port_https},
         "Protocol": "tcp"
       }
     ],
@@ -205,12 +206,63 @@ resource "aws_ecs_task_definition" "main" {
 ]
 EOF
 }
+
+resource "aws_alb" "main" {
+  name              = "${var.app_name}-ALB"
+  subnets           = ["${module.vpc.public_subnets}"]
+  # todo security group
+}
+resource "aws_alb_listener" "http" {
+  load_balancer_arn = "${aws_alb.main.arn}"
+  port              = 80
+  protocol          = "HTTP"
+  default_action {
+    target_group_arn  = "${aws_alb_target_group.main.arn}"
+    type              = "forward"
+  }
+}
+
+# TODO
+#resource "aws_alb_listener" "https" {
+#  load_balancer_arn = "${aws_alb.main.arn}"
+#  port              = 443
+#  protocol          = "HTTPS"
+#  default action {
+#    target_group_arn  = "${aws_alb_target_group.main.arn}"
+#    type              = "forward"
+#  }
+#}
+# 
+resource "aws_alb_target_group" "main" {
+  name              = "${var.app_name}-TG-HTTP"
+  port              = 80
+  protocol          = "HTTP"
+  vpc_id            = "${module.vpc.vpc_id}"
+  stickiness {
+    type            = "lb_cookie"
+  }
+}
 resource "aws_ecs_service" "main" {
   name              = "${var.app_name}"
   launch_type       = "EC2"
   cluster           = "${aws_ecs_cluster.main.id}"
   task_definition   = "${aws_ecs_task_definition.main.arn}"
   desired_count     = "${var.ecs_service_desired_count}"
+
+  load_balancer {
+    target_group_arn  = "${aws_alb_target_group.main.id}"
+    container_name    = "${var.app_name}"
+    container_port    = "${var.kong_port_http}"
+  }
+  depends_on = [
+    "aws_alb.main"
+  ]
+}
+output "alb_dns_name" {
+  value = "${aws_alb.main.dns_name}"
+}
+output "alb_zone_id" {
+  value = "${aws_alb.main.zone_id}"
 }
 
 
@@ -248,7 +300,7 @@ module "rds_sg" {
 
 }
 resource "aws_db_parameter_group" "main" {
-  name    = "postgres"
+  name    = "${var.db_engine}"
   family  = "${var.db_engine}${var.db_engine_version}"
 
   parameter {
@@ -275,10 +327,13 @@ module "rds" {
 
   vpc_security_group_ids    = ["${module.rds_sg.this_security_group_id}"]
   subnet_ids                = "${module.vpc.private_subnets}"
-  multi_az                  = true
+  multi_az                  = false
+  apply_immediately         = true
+  skip_final_snapshot       = true
 
-  parameter_group_name      = "${aws_db_parameter_group.main.name}"
+  parameter_group_name      = "${var.db_engine}"
 
+  name                      = "${var.db_name}"
   username                  = "${var.db_username}"
   password                  = "${var.db_password}"
 }
@@ -301,6 +356,6 @@ resource "aws_ssm_parameter" "db_engine" {
 }
 resource "aws_ssm_parameter" "db_host" {
   name    = "${local.ssm_parameter_name_db_host}"
-  value   = "${module.rds.this_db_instance_endpoint}"
+  value   = "${replace(module.rds.this_db_instance_endpoint, "/:.*/", "")}"
   type    = "SecureString"
 }
