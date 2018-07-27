@@ -241,6 +241,10 @@ resource "aws_alb_target_group" "main" {
   stickiness {
     type            = "lb_cookie"
   }
+  health_check {
+    path            = "/"
+    matcher         = "200,404"
+  }
 }
 resource "aws_ecs_service" "main" {
   name              = "${var.app_name}"
