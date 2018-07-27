@@ -26,61 +26,28 @@ module "vpc" {
 }
 
 # SGs
-module "ecs_sg" {
-  source      = "modules/sg"
+resource "aws_security_group" "ecs_sg" {
   name        = "${var.app_name}-ECS-SG"
   vpc_id      = "${module.vpc.vpc_id}"
 
-  # todo elb only
-  ingress_cidr_blocks = ["0.0.0.0/0"]
-
-  ingress_with_cidr_blocks = [
+  ingress = {
+    description       = "all from alb"
+    from_port         = 0
+    to_port           = 0
+    protocol          = "-1"
+    security_groups   = ["${module.alb_sg.this_security_group_id}"]
+    self              = true
+  }
+  egress = {
+    description = "all outbound"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags  = [
     {
-      description = "ssh"
-      protocol    = "tcp"
-      from_port   = 22
-      to_port     = 22
-      cidr_blocks = "0.0.0.0/0"
-    },
-    {
-      description = "http"
-      protocol    = "tcp"
-      from_port   = "${var.kong_port_http}"
-      to_port     = "${var.kong_port_http}"
-      cidr_blocks = "0.0.0.0/0"
-    },
-    {
-      description = "https"
-      protocol    = "tcp"
-      from_port   = "${var.kong_port_https}"
-      to_port     = "${var.kong_port_https}"
-      cidr_blocks = "0.0.0.0/0"
-    }
-    # TODO 8001 admin from bastion only
-  ]
-  egress_with_cidr_blocks = [
-    {
-      description = "all outbound"
-      from_port   = 0
-      to_port     = 0
-      protocol    = "-1"
-      cidr_blocks = "0.0.0.0/0"
-    }
-  ]
-
-  # Can't just use proto=-1 since the module then opens all ports
-  ingress_with_self = [
-    {
-      description = "kong inter-node comms, tcp"
-      from_port   = 7946
-      to_port     = 7946
-      protocol    = "tcp"
-    },
-    {
-      description = "kong inter-node comms, udp"
-      from_port   = 7946
-      to_port     = 7946
-      protocol    = "udp"
+      Name = "${var.app_name}-ECS-SG"
     }
   ]
 }
@@ -124,7 +91,7 @@ module "asg" {
 
   image_id        = "${data.aws_ami.ecs.id}"
   instance_type   = "${var.ecs_cluster_instance_type}"
-  security_groups = ["${module.ecs_sg.this_security_group_id}"]
+  security_groups = ["${aws_security_group.ecs_sg.id}"]
   key_name        = "${var.ssh_key_name}"
 
   # block devices - use defaults
@@ -207,10 +174,44 @@ resource "aws_ecs_task_definition" "main" {
 EOF
 }
 
+module "alb_sg" {
+  source      = "modules/sg"
+  name        = "${var.app_name}-ALB-SG"
+  vpc_id      = "${module.vpc.vpc_id}"
+
+  ingress_cidr_blocks = ["0.0.0.0/0"]
+
+  ingress_with_cidr_blocks = [
+    {
+      description = "http"
+      protocol    = "tcp"
+      from_port   = 80,
+      to_port     = 80,
+      cidr_blocks = "0.0.0.0/0"
+    },
+    {
+      description = "https"
+      protocol    = "tcp"
+      from_port   = 443,
+      to_port     = 443,
+      cidr_blocks = "0.0.0.0/0"
+    }
+  ]
+  egress_with_cidr_blocks = [
+    {
+      description = "all outbound"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = "0.0.0.0/0"
+    }
+  ]
+}
+
 resource "aws_alb" "main" {
   name              = "${var.app_name}-ALB"
   subnets           = ["${module.vpc.public_subnets}"]
-  # todo security group
+  security_groups   = ["${module.alb_sg.this_security_group_id}"]
 }
 resource "aws_alb_listener" "http" {
   load_balancer_arn = "${aws_alb.main.arn}"
