@@ -66,14 +66,19 @@ resource "aws_ecs_cluster" "main" {
   name = "${var.app_name}"
 }
 module "asg" {
-  source                    = "modules/asg"
-  name                      = "${var.app_name}-ECS-ASG"
-  image_id                  = "${data.aws_ami.ecs.id}"
-  instance_type             = "${var.ecs_cluster_instance_type}"
-  key_name                  = "${var.ssh_key_name}"
+  source                      = "modules/asg"
+  name                        = "${var.app_name}-ECS-ASG"
+  image_id                    = "${data.aws_ami.ecs.id}"
+  instance_type               = "${var.ecs_cluster_instance_type}"
+  key_name                    = "${var.ssh_key_name}"
 
   # Launch configuration
-  lc_name                   = "${var.app_name}-ECS-LC"
+  lc_name                     = "${var.app_name}-ECS-LC"
+  create_lc                   = true
+  associate_public_ip_address = false
+  iam_instance_profile        = "${module.ecs_cluster_iam.ecs_instance_profile_id}"
+  vpc_zone_identifier         = ["${module.vpc.public_subnets}"]
+  user_data                   = "${data.template_file.ecs_user_data.rendered}"
 
   security_groups = [
     "${aws_security_group.ecs_sg.id}",
@@ -82,14 +87,11 @@ module "asg" {
 
   # Auto scaling group
   asg_name                    = "${var.app_name}-ECS-ASG"
-  vpc_zone_identifier       = ["${module.vpc.public_subnets}"]
-  iam_instance_profile      = "${module.ecs_cluster_iam.ecs_instance_profile_id}"
-  user_data                 = "${data.template_file.ecs_user_data.rendered}"
-  health_check_type         = "EC2"
-  min_size                  = 1
-  max_size                  = 2
-  desired_capacity          = 1
-  wait_for_capacity_timeout = 0
+  health_check_type           = "EC2"
+  min_size                    = 1
+  max_size                    = 2
+  desired_capacity            = 1
+  wait_for_capacity_timeout   = 0
 }
 output "ami_id" {
   value = "${data.aws_ami.ecs.id}"
