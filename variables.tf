@@ -35,10 +35,14 @@ variable "container_memory_reservation" {
 }
 
 # DB
+variable "db_name" {
+  default = "kong"
+}
 variable "db_username" {
-  default = "postgres"
+  default = "kong"
 }
 variable "db_password" {
+  default = "blablabla"
 }
 variable "db_engine" {
   default = "postgres"
@@ -68,4 +72,10 @@ variable "db_allocated_storage_gb" {
 # Kong
 variable "kong_port_admin" {
   default = "8001"
+}
+variable "kong_port_http" {
+  default = 8000
+}
+variable "kong_port_https" {
+  default = 8443
 }
