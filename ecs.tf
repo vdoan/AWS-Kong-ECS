@@ -4,7 +4,7 @@ resource "aws_security_group" "ecs_sg" {
   vpc_id      = "${module.vpc.vpc_id}"
 
   ingress = {
-    description       = "all from alb"
+    description       = "all from self + alb"
     from_port         = 0
     to_port           = 0
     protocol          = "-1"
@@ -24,6 +24,19 @@ resource "aws_security_group" "ecs_sg" {
     }
   ]
 }
+resource "aws_security_group" "all_from_bastion" {
+  name        = "${var.app_name}-From-Bastion-SG"
+  vpc_id      = "${module.vpc.vpc_id}"
+
+  ingress = {
+    description       = "all from bastion"
+    from_port         = 0
+    to_port           = 0
+    protocol          = "-1"
+    security_groups   = ["${aws_security_group.bastion.id}"]
+  }
+}
+
 data "aws_ami" "ecs" {
   most_recent = true
   filter {
@@ -53,22 +66,22 @@ resource "aws_ecs_cluster" "main" {
   name = "${var.app_name}"
 }
 module "asg" {
-  source = "modules/asg"
-
-  name = "${var.app_name}-ECS-ASG"
+  source                    = "modules/asg"
+  name                      = "${var.app_name}-ECS-ASG"
+  image_id                  = "${data.aws_ami.ecs.id}"
+  instance_type             = "${var.ecs_cluster_instance_type}"
+  key_name                  = "${var.ssh_key_name}"
 
   # Launch configuration
-  lc_name = "${var.app_name}-ECS-LC"
+  lc_name                   = "${var.app_name}-ECS-LC"
 
-  image_id        = "${data.aws_ami.ecs.id}"
-  instance_type   = "${var.ecs_cluster_instance_type}"
-  security_groups = ["${aws_security_group.ecs_sg.id}"]
-  key_name        = "${var.ssh_key_name}"
-
-  # block devices - use defaults
+  security_groups = [
+    "${aws_security_group.ecs_sg.id}",
+    "${aws_security_group.all_from_bastion.id}"
+  ]
 
   # Auto scaling group
-  asg_name                  = "${var.app_name}-ECS-ASG"
+  asg_name                    = "${var.app_name}-ECS-ASG"
   vpc_zone_identifier       = ["${module.vpc.public_subnets}"]
   iam_instance_profile      = "${module.ecs_cluster_iam.ecs_instance_profile_id}"
   user_data                 = "${data.template_file.ecs_user_data.rendered}"
@@ -77,19 +90,6 @@ module "asg" {
   max_size                  = 2
   desired_capacity          = 1
   wait_for_capacity_timeout = 0
-
-  tags = [
-    {
-      key                 = "Environment"
-      value               = "dev"
-      propagate_at_launch = true
-    },
-    {
-      key                 = "Project"
-      value               = "kong demo"
-      propagate_at_launch = true
-    },
-  ]
 }
 output "ami_id" {
   value = "${data.aws_ami.ecs.id}"

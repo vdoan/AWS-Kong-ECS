@@ -18,14 +18,25 @@ resource "aws_ecs_task_definition" "main" {
     "portMappings": [
       {
         "ContainerPort": ${var.kong_port_http},
+        "HostPort": ${var.kong_port_http},
         "Protocol": "tcp"
       },
       {
         "ContainerPort": ${var.kong_port_https},
+        "HostPort": ${var.kong_port_https},
+        "Protocol": "tcp"
+      },
+      {
+        "ContainerPort": ${var.kong_port_admin},
+        "HostPort": ${var.kong_port_admin},
         "Protocol": "tcp"
       }
     ],
     "environment": [
+      {
+        "name"  : "KONG_ADMIN_LISTEN",
+        "value" : "0.0.0.0:${var.kong_port_admin}"
+      },
       {
         "name"  : "SSM_PARAMETER_NAME_DB_USERNAME",
         "value" : "${local.ssm_parameter_name_db_username}"
