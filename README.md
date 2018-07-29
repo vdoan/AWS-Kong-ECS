@@ -16,6 +16,12 @@ Note: Service Discovery currently uses [ECS Service Discovery](https://docs.aws.
 ![Plus](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSni-KOe3lGmossBj8fiAN9k_yMRs3ueCcp81iSgdwndeuguTvzLQ)
 ![Terraform](https://raw.githubusercontent.com/mauve/vscode-terraform/master/terraform.png)
 
+# Dependencies
+
+Most terraform modules added as git submodules, cribbed from Terraform community AWS modules: https://github.com/terraform-aws-modules/
+
+**After cloning this repo you will need to `git submodule init && git submodule update` to get them**
+
 # Functionality
 
 ## Bastion Host
@@ -103,8 +109,3 @@ The only var not specified in variables.tf is the database pasword:
 
 (or leaving it blank will just prompt)
 
-# Dependencies
-
-Most terraform modules added as git submodules, cribbed from Terraform community AWS modules: https://github.com/terraform-aws-modules/
-
-After cloning this, you will need to `git submodule init && git submodule update` to get them
