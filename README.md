@@ -87,10 +87,7 @@ The container is hosted on [Docker Hub](https://hub.docker.com/r/rdkls/kong_ssm/
 - RDS (postgres)
 - SSM Parameter Store
     - Storing config/secrets (as SecureString)
-
-## To Do
-
-- Kong access RDS (currently container just constantly restarts)
+- Kong access RDS
 - Load Balancer
 - Bastion for Kong Admin
 
