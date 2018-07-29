@@ -7,6 +7,7 @@ locals {
 
 resource "aws_ecs_task_definition" "nyan" {
   family        = "${local.app_name}"
+  network_mode  = "awsvpc"
   container_definitions = <<EOF
 [
   {
@@ -50,12 +51,10 @@ resource "aws_service_discovery_service" "nyan" {
   name = "nyan"
   dns_config {
     namespace_id = "${aws_service_discovery_private_dns_namespace.main.id}"
-    routing_policy = "MULTIVALUE"
     dns_records {
       ttl = 10
-      type = "SRV"
+      type = "A"
     }
-    routing_policy = "MULTIVALUE"
   }
 
   health_check_custom_config {

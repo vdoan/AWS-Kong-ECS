@@ -8,6 +8,7 @@ module "ecs_task_iam" {
 resource "aws_ecs_task_definition" "kong" {
   family        = "${var.app_name}"
   task_role_arn = "${module.ecs_task_iam.arn}"
+  network_mode  = "awsvpc"
   container_definitions = <<EOF
 [
   {
@@ -18,17 +19,14 @@ resource "aws_ecs_task_definition" "kong" {
     "portMappings": [
       {
         "ContainerPort": ${var.kong_port_http},
-        "HostPort": ${var.kong_port_http},
         "Protocol": "tcp"
       },
       {
         "ContainerPort": ${var.kong_port_https},
-        "HostPort": ${var.kong_port_https},
         "Protocol": "tcp"
       },
       {
         "ContainerPort": ${var.kong_port_admin},
-        "HostPort": ${var.kong_port_admin},
         "Protocol": "tcp"
       }
     ],
@@ -87,7 +85,7 @@ resource "aws_service_discovery_service" "kong" {
     routing_policy = "MULTIVALUE"
     dns_records {
       ttl = 10
-      type = "SRV"
+      type = "A"
     }
     routing_policy = "MULTIVALUE"
   }
