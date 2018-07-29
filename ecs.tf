@@ -77,7 +77,7 @@ module "asg" {
   create_lc                   = true
   associate_public_ip_address = false
   iam_instance_profile        = "${module.ecs_cluster_iam.ecs_instance_profile_id}"
-  vpc_zone_identifier         = ["${module.vpc.public_subnets}"]
+  vpc_zone_identifier         = ["${module.vpc.private_subnets}"]
   user_data                   = "${data.template_file.ecs_user_data.rendered}"
 
   security_groups = [
