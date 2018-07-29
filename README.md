@@ -16,11 +16,14 @@ Note: Service Discovery currently uses [ECS Service Discovery](https://docs.aws.
 ![Plus](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSni-KOe3lGmossBj8fiAN9k_yMRs3ueCcp81iSgdwndeuguTvzLQ)
 ![Terraform](https://raw.githubusercontent.com/mauve/vscode-terraform/master/terraform.png)
 
-# Dependencies
+# Instructions
 
-Most terraform modules added as git submodules, cribbed from Terraform community AWS modules: https://github.com/terraform-aws-modules/
-
-**After cloning this repo you will need to `git submodule init && git submodule update` to get them**
+1. Clone this repo
+1. Most TF modules included via git submodules: `git submodule init && git submodule update` to get them
+1. [Install terraform](https://www.terraform.io/intro/getting-started/install.html) (alternatively - [run terraform via docker](https://hub.docker.com/r/hashicorp/terraform/))
+1. Update variables.tf according to your environment
+1. `terraform init`
+1. `terraform apply`
 
 # Functionality
 
