@@ -51,5 +51,5 @@ resource "aws_instance" "bastion" {
 }
 
 output "bastion_ssh_tunnel_command" {
-  value = "ssh -N -L 8001:ecs_priv_ip:8001 ubuntu@${aws_instance.bastion.public_ip}"
+  value = "ssh -i ~/.ssh/${var.ssh_key_name}.pem -N -L 8001:ecs_priv_ip:8001 ubuntu@${aws_instance.bastion.public_ip}"
 }
