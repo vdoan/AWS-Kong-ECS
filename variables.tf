@@ -2,10 +2,10 @@ variable "app_name" {
   default = "Kong"
 }
 variable "region" {
-  default = "ap-southeast-2"
+  default = "us-west-2"
 }
 variable "ssh_key_name" {
-  default = "jk_sydney"
+  default = "jk_uswest2"
 }
 
 # SSM
