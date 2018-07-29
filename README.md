@@ -20,7 +20,7 @@ Note: Service Discovery currently uses [ECS Service Discovery](https://docs.aws.
 
 1. Clone this repo
 1. Most TF modules included via git submodules: `git submodule init && git submodule update` to get them
-1. [Install terraform](https://www.terraform.io/intro/getting-started/install.html) (alternatively - [run terraform via docker](https://hub.docker.com/r/hashicorp/terraform/))
+1. [Install terraform](https://www.terraform.io/intro/getting-started/install.html) (alternatively - [run terraform via docker](https://hub.docker.com/r/hashicorp/terraform/) - note they don't mention there to mount the directory with TF templates to the container, don't forget that)
 1. Update variables.tf according to your environment
 1. `terraform init`
 1. `terraform apply`
@@ -41,7 +41,7 @@ To access kong admin api:
 
 Then connect to localhost:8001
 
-## Docker Container
+## Kong Docker Image
 
 ### Configured from SSM Parameters
 
@@ -99,16 +99,4 @@ The container is hosted on [Docker Hub](https://hub.docker.com/r/rdkls/kong_ssm/
 - Kong access RDS
 - Load Balancer
 - Bastion for Kong Admin
-
-# Usage
-
-Per standard Terraform best prac - creds expected to be in environment OR instance profile
-
-e.g. my dev instance has IAM profile "provisioner" which runs this
-
-The only var not specified in variables.tf is the database pasword:
-
-`terraform apply -var 'db_password=myawesomepassword'`
-
-(or leaving it blank will just prompt)
-
+- ECS Service Discovery
