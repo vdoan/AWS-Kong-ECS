@@ -37,7 +37,28 @@ resource "aws_ecs_service" "nyan" {
     container_name    = "${local.app_name}"
     container_port    = "${local.port_http}"
   }
+  service_registries {
+    registry_arn      = "${aws_service_discovery_service.nyan.arn}"
+    container_name    = "${local.app_name}"
+    container_port    = "${local.port_http}"
+  }
   depends_on = [
     "aws_alb.main"
   ]
+}
+resource "aws_service_discovery_service" "nyan" {
+  name = "nyan"
+  dns_config {
+    namespace_id = "${aws_service_discovery_private_dns_namespace.main.id}"
+    routing_policy = "MULTIVALUE"
+    dns_records {
+      ttl = 10
+      type = "SRV"
+    }
+    routing_policy = "MULTIVALUE"
+  }
+
+  health_check_custom_config {
+    failure_threshold = 1
+  }
 }

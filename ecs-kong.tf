@@ -5,7 +5,7 @@ module "ecs_task_iam" {
   region                      = "${var.region}"
   ssm_parameter_name_prefix   = "${var.ssm_parameter_name_prefix}"
 }
-resource "aws_ecs_task_definition" "main" {
+resource "aws_ecs_task_definition" "kong" {
   family        = "${var.app_name}"
   task_role_arn = "${module.ecs_task_iam.arn}"
   container_definitions = <<EOF
@@ -59,11 +59,11 @@ resource "aws_ecs_task_definition" "main" {
 EOF
 }
 
-resource "aws_ecs_service" "main" {
+resource "aws_ecs_service" "kong" {
   name              = "${var.app_name}"
   launch_type       = "EC2"
   cluster           = "${aws_ecs_cluster.main.id}"
-  task_definition   = "${aws_ecs_task_definition.main.arn}"
+  task_definition   = "${aws_ecs_task_definition.kong.arn}"
   desired_count     = "${var.ecs_service_desired_count}"
 
   load_balancer {
@@ -71,7 +71,28 @@ resource "aws_ecs_service" "main" {
     container_name    = "${var.app_name}"
     container_port    = "${var.kong_port_http}"
   }
+  service_registries {
+    registry_arn      = "${aws_service_discovery_service.kong.arn}"
+    container_name    = "${var.app_name}"
+    container_port    = "${var.kong_port_http}"
+  }
   depends_on = [
     "aws_alb.main"
   ]
+}
+resource "aws_service_discovery_service" "kong" {
+  name = "kong"
+  dns_config {
+    namespace_id = "${aws_service_discovery_private_dns_namespace.main.id}"
+    routing_policy = "MULTIVALUE"
+    dns_records {
+      ttl = 10
+      type = "SRV"
+    }
+    routing_policy = "MULTIVALUE"
+  }
+
+  health_check_custom_config {
+    failure_threshold = 1
+  }
 }
