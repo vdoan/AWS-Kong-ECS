@@ -32,14 +32,14 @@ Note: Service Discovery currently uses [ECS Service Discovery](https://docs.aws.
 ## ECS Services
 
 - Kong Gateway
-    - port 8000 (standard API Gateway) open from ALB
+    - port 8000 (standard API Gateway) open from ALB and Bastion (kong.ecs.local)
     - port 8001 (admin API) open from Kong Dashboard container
 - Kong Dashboard
     - connects to kong ADMIN API port 8001
-    - port 8080 (standard HTTP interface) open from Bastion
+    - port 8080 (standard HTTP interface) open from Bastion (kong-dash.ecs.local)
 - Nyan
     - shows nyan cat
-    - port 80 open from Kong Gateway
+    - port 80 open from Kong Gateway (nyan.ecs.local)
 
 ## Bastion Host
 
@@ -92,7 +92,6 @@ This module takes variables from the rest of the config (changing e.g. prefix/ss
 ### Registry & Source
 
 The container is hosted on [Docker Hub](https://hub.docker.com/r/rdkls/kong_ssm/), and the source on [BitBucket](https://bitbucket.org/nick_doyle/docker_kong_ssm/)
-
 
 ## Done
 
