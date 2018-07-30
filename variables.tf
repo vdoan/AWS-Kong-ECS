@@ -22,7 +22,8 @@ locals {
  
  # ECS
 variable "ecs_cluster_instance_type" {
-  default = "t2.micro"
+  #default = "t2.micro"
+  default = "m5.xlarge"
 }
 variable "app_image" {
   default = "rdkls/kong_ssm:latest"
@@ -31,7 +32,7 @@ variable "ecs_service_desired_count" {
   default = 1
 }
 variable "container_memory_reservation" {
-  default = 128
+  default = 64
 }
 
 # DB
