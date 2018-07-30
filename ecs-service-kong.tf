@@ -72,7 +72,6 @@ resource "aws_ecs_service" "kong" {
   service_registries {
     registry_arn      = "${aws_service_discovery_service.kong.arn}"
     container_name    = "${var.app_name}"
-    container_port    = "${var.kong_port_http}"
   }
   depends_on = [
     "aws_alb.main"

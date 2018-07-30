@@ -41,7 +41,6 @@ resource "aws_ecs_service" "nyan" {
   service_registries {
     registry_arn      = "${aws_service_discovery_service.nyan.arn}"
     container_name    = "${local.app_name}"
-    container_port    = "${local.port_http}"
   }
   depends_on = [
     "aws_alb.main"
