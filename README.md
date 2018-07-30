@@ -29,6 +29,18 @@ Note: Service Discovery currently uses [ECS Service Discovery](https://docs.aws.
 
 # Functionality
 
+## ECS Services
+
+- Kong Gateway
+    - port 8000 (standard API Gateway) open from ALB
+    - port 8001 (admin API) open from Kong Dashboard container
+- Kong Dashboard
+    - connects to kong ADMIN API port 8001
+    - port 8080 (standard HTTP interface) open from Bastion
+- Nyan
+    - shows nyan cat
+    - port 80 open from Kong Gateway
+
 ## Bastion Host
 
 Admin interfaces should arguably only ever be available over VPN or via bastion. To this end a basic bastion is provided, see bastion.tf.
