@@ -1,6 +1,8 @@
 # Overview
 
-Deploy [Kong](https://konghq.com/kong-community-edition/) to AWS, with Postgres, in highly-available multi-AZ and secure config
+Deploy [Kong](https://konghq.com/kong-community-edition/) to AWS, with RDS (Postgres), in highly-available multi-AZ and secure config
+
+![Architecture](doc/img/architecture.png)
 
 Note: Service Discovery currently uses [ECS Service Discovery](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-discovery.html), which is currently only available in the following regions:
 
@@ -102,3 +104,13 @@ The container is hosted on [Docker Hub](https://hub.docker.com/r/rdkls/kong_ssm/
 - Load Balancer
 - Bastion for Kong Admin
 - ECS Service Discovery
+
+# Cost
+
+Major costs:
+
+- Service discovery requires each task to have an ENI hence m5.xlarge used for ECS cluster instance
+- ALB
+
+![Budget](doc/img/budget.png)
+
