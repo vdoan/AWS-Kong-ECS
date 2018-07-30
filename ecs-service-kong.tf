@@ -6,9 +6,9 @@ module "ecs_task_iam" {
   ssm_parameter_name_prefix   = "${var.ssm_parameter_name_prefix}"
 }
 resource "aws_ecs_task_definition" "kong" {
-  family        = "${var.app_name}"
-  task_role_arn = "${module.ecs_task_iam.arn}"
-  network_mode  = "awsvpc"
+  family                = "${var.app_name}"
+  task_role_arn         = "${module.ecs_task_iam.arn}"
+  network_mode          = "awsvpc"
   container_definitions = <<EOF
 [
   {
@@ -72,6 +72,10 @@ resource "aws_ecs_service" "kong" {
   service_registries {
     registry_arn      = "${aws_service_discovery_service.kong.arn}"
     container_name    = "${var.app_name}"
+  }
+  network_configuration {
+    subnets             = ["${module.vpc.private_subnets}"]
+    assign_public_ip    = false
   }
   depends_on = [
     "aws_alb.main"

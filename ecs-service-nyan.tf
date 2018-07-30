@@ -6,8 +6,8 @@ locals {
 }
 
 resource "aws_ecs_task_definition" "nyan" {
-  family        = "${local.app_name}"
-  network_mode  = "awsvpc"
+  family                = "${local.app_name}"
+  network_mode          = "awsvpc"
   container_definitions = <<EOF
 [
   {
@@ -41,6 +41,10 @@ resource "aws_ecs_service" "nyan" {
   service_registries {
     registry_arn      = "${aws_service_discovery_service.nyan.arn}"
     container_name    = "${local.app_name}"
+  }
+  network_configuration {
+    subnets             = ["${module.vpc.private_subnets}"]
+    assign_public_ip    = false
   }
   depends_on = [
     "aws_alb.main"
