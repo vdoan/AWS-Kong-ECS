@@ -56,13 +56,13 @@ resource "aws_ecs_task_definition" "kong" {
 ]
 EOF
 }
-
 resource "aws_ecs_service" "kong" {
-  name              = "${var.app_name}"
-  launch_type       = "EC2"
-  cluster           = "${aws_ecs_cluster.main.id}"
-  task_definition   = "${aws_ecs_task_definition.kong.arn}"
-  desired_count     = "${var.ecs_service_desired_count}"
+  name                = "${var.app_name}"
+  launch_type         = "EC2"
+  cluster             = "${aws_ecs_cluster.main.id}"
+  task_definition     = "${aws_ecs_task_definition.kong.arn}"
+  desired_count       = "${var.ecs_service_desired_count}"
+  scheduling_strategy = "DAEMON"
 
   load_balancer {
     target_group_arn  = "${aws_alb_target_group.main.id}"
@@ -76,6 +76,7 @@ resource "aws_ecs_service" "kong" {
   network_configuration {
     subnets             = ["${module.vpc.private_subnets}"]
     assign_public_ip    = false
+    security_groups     = ["${aws_security_group.ecs_service_kong.id}"]
   }
   depends_on = [
     "aws_alb.main"
@@ -96,4 +97,33 @@ resource "aws_service_discovery_service" "kong" {
   health_check_custom_config {
     failure_threshold = 1
   }
+}
+resource "aws_security_group" "ecs_service_kong" {
+  name        = "${var.app_name}-ECS-SG-kong"
+  vpc_id      = "${module.vpc.vpc_id}"
+
+  ingress = {
+    description       = "all from self + alb + bastion + kong dash"
+    from_port         = 0
+    to_port           = 0
+    protocol          = "-1"
+    security_groups   = [
+      "${module.alb_sg.this_security_group_id}",
+      "${aws_security_group.bastion.id}",
+      "${aws_security_group.ecs_service_kong_dash.id}"
+    ]
+    self              = true
+  }
+  egress = {
+    description = "all outbound"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags  = [
+    {
+      Name = "${var.app_name}-ECS-SG-kong"
+    }
+  ]
 }

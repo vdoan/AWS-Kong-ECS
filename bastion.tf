@@ -36,7 +36,14 @@ resource "aws_security_group" "bastion" {
     Name        = "${var.app_name}-Bastion-SG"
   }
 }
-
+data "template_file" "bastion_user_data" {
+template = <<EOF
+#!/bin/bash
+cat << EOF_CONFIG >> /etc/ssh/sshd_config
+AllowTcpForwarding yes
+EOF_CONFIG
+EOF
+}
 resource "aws_instance" "bastion" {
   ami                             = "${data.aws_ami.ubuntu.id}"
   instance_type                   = "${var.bastion_instance_class}"
@@ -44,14 +51,15 @@ resource "aws_instance" "bastion" {
   vpc_security_group_ids          = ["${aws_security_group.bastion.id}"]
   subnet_id                       = "${module.vpc.public_subnets[0]}"
   associate_public_ip_address     = true
+  user_data                       = "${data.template_file.bastion_user_data.rendered}"
 
   tags {
     Name = "Bastion"
   }
 }
 
-output "bastion_ssh_tunnel_command" {
-  value = "ssh -i ~/.ssh/${var.ssh_key_name}.pem -N -L 8001:ecs_instance_ip:8001 ubuntu@${aws_instance.bastion.public_ip}"
+output "tunnel_kong_dashboard" {
+  value = "ssh -i ~/.ssh/${var.ssh_key_name}.pem -N -L 8080:kong-dash.ecs.local:8080 ubuntu@${aws_instance.bastion.public_ip}"
 }
 output "bastion_ssh_tunnel_command_jump" {
   value = "ssh -At ubuntu@${aws_instance.bastion.public_ip} ssh -t ec2-user@ecs_instance_ip"

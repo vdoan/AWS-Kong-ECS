@@ -36,14 +36,27 @@ resource "aws_iam_role_policy" "ecs_instance_role_policy" {
         "ecs:StartTask"
       ],
       "Resource": "*"
-    }
+    },
+		{
+			"Effect": "Allow",
+			"Action": [
+				"ec2:CreateNetworkInterface",
+				"ec2:DescribeNetworkInterfaces",
+				"ec2:DetachNetworkInterface",
+				"ec2:DeleteNetworkInterface",
+				"ec2:AttachNetworkInterface",
+				"ec2:DescribeInstances",
+				"autoscaling:CompleteLifecycleAction"
+			],
+			"Resource": "*"
+		}
   ]
 }
 EOF
   role     = "${aws_iam_role.ecs_container_instance.id}"
 }
 
-# Instance profile for this role - to be attached to ASG instances
+# Instance profile for this role - to be attached to ECS instances
 resource "aws_iam_instance_profile" "ecs" {
   name = "ecs-container-instance-profile"
   path = "/"
