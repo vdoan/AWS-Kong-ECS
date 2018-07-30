@@ -59,6 +59,8 @@ The SSM parameter names are passed in as environment variables at 'docker run' t
 
 The parameters are set at terraform apply-time - see main.tf e.g. resource "aws_ssm_parameter" "db_username"
 
+My [docker image with Kong taking configuration from SSM parameter store is on DockerHub](https://hub.docker.com/r/rdkls/kong_ssm)
+
 ### Permissions
 
 This setup also requires that the running container (task) have permission to read and decrypt the SSM Parameters.
