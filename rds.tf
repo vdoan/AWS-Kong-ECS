@@ -10,18 +10,18 @@ resource "aws_security_group" "rds_sg" {
     to_port                   = "5432"
     security_groups           = ["${aws_security_group.ecs_service_kong.id}"]
   }
-  egress = {
+  egress  {
     description = "all outbound"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  tags = [
-    {
-      Name    = "${var.app_name}-RDS-SG"
-    }
-  ]
+  tags = {
+
+    Name    = "${var.app_name}-RDS-SG"
+
+  } 
 }
 resource "aws_db_parameter_group" "main" {
   name    = "${var.db_engine}"

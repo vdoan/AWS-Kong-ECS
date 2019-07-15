@@ -3,7 +3,7 @@ resource "aws_security_group" "ecs_sg" {
   name        = "${var.app_name}-ECS-SG"
   vpc_id      = "${module.vpc.vpc_id}"
 
-  ingress = {
+  ingress  {
     description       = "all from self + alb"
     from_port         = 0
     to_port           = 0
@@ -11,24 +11,24 @@ resource "aws_security_group" "ecs_sg" {
     security_groups   = ["${module.alb_sg.this_security_group_id}"]
     self              = true
   }
-  egress = {
+  egress  {
     description = "all outbound"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  tags  = [
-    {
-      Name = "${var.app_name}-ECS-SG"
-    }
-  ]
+  tags  = {
+    Name = "${var.app_name}-ECS-SG"
+  }
+      
+    
 }
 resource "aws_security_group" "all_from_bastion" {
   name        = "${var.app_name}-From-Bastion-SG"
   vpc_id      = "${module.vpc.vpc_id}"
 
-  ingress = {
+  ingress  {
     description       = "all from bastion"
     from_port         = 0
     to_port           = 0
@@ -39,6 +39,7 @@ resource "aws_security_group" "all_from_bastion" {
 
 data "aws_ami" "ecs" {
   most_recent = true
+  owners      = ["self"]
   filter {
     name      = "owner-alias"
     values    = ["amazon"]

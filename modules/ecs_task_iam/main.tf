@@ -33,7 +33,7 @@ data "template_file" "ecs_task_role_policy" {
   ]
 }
 EOF
-  vars {
+  vars = {
     account_id                  = "${var.account_id}"
     region                      = "${var.region}"
     ssm_parameter_name_prefix   = "${var.ssm_parameter_name_prefix}"
