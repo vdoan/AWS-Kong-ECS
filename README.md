@@ -7,6 +7,7 @@ Deploy [Kong](https://konghq.com/kong-community-edition/) to AWS, with RDS (Post
 Note: Service Discovery currently uses [ECS Service Discovery](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-discovery.html)
 
 # Disclaimer
+The architecture of Kong on AWS ECS is fairly basic. I stumbled upon [this article](https://medium.com/@nick.p.doyle/deploying-kong-to-aws-elastic-container-service-with-terraform-9de83d7e21) by Nick Doyle while I was googling how to deploy Kong on AWS ECS. I thought it would be a good chance to learn terraform because I've never used it so far and it would be easier than using Cloudformation alone or Cloudformation with say Ansible and Make.
 Most of the code was done by [Nick Doyle](https://bitbucket.org/%7B5d0aaa3a-ab6b-4079-8249-6632d8831d28%7D/) I only cleaned up the code as it wasn't working with the latest Terraform version, removed git submodules because I hate them.
 
 
@@ -127,3 +128,12 @@ Major costs:
 2. [Nick Doyle's Repo on Bitbucket](https://bitbucket.org/nick_doyle/kong_aws_terraform/src/master/)
 3. [Terraform AWS Modules](https://github.com/terraform-aws-modules)
 
+# What I have Improved over the already existing code
+1. Removed git submodules
+2. Fixed syntax errors with the latest Terraform version
+
+
+# What I would have done if I had more time
+1. Use AWS Session Manager and get rid of the bastion
+2. Add Tag and Drain Lambdas to hookup ECS with Autoscaling properly to prevent service outages during autoscaling events
+3. 
