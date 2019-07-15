@@ -32,7 +32,7 @@ resource "aws_security_group" "bastion" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  tags {
+  tags = {
     Name        = "${var.app_name}-Bastion-SG"
   }
 }
@@ -53,7 +53,7 @@ resource "aws_instance" "bastion" {
   associate_public_ip_address     = true
   user_data                       = "${data.template_file.bastion_user_data.rendered}"
 
-  tags {
+  tags = {
     Name = "Bastion"
   }
 }
