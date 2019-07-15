@@ -1,5 +1,5 @@
 module "alb_sg" {
-  source      = "modules/sg"
+  source      = "terraform-aws-modules/security-group/aws"
   name        = "${var.app_name}-ALB-SG"
   vpc_id      = "${module.vpc.vpc_id}"
 

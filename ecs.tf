@@ -49,7 +49,7 @@ data "aws_ami" "ecs" {
   }
 }
 module "ecs_cluster_iam" {
-  source = "modules/ecs_cluster_iam"
+  source = "./modules/ecs_cluster_iam"
 }
 data "template_file" "ecs_user_data" {
   template = <<EOF
@@ -67,7 +67,7 @@ resource "aws_ecs_cluster" "main" {
   name = "${var.app_name}"
 }
 module "asg" {
-  source                      = "modules/asg"
+  source                      = "terraform-aws-modules/autoscaling/aws"
   name                        = "${var.app_name}-ECS-ASG"
   image_id                    = "${data.aws_ami.ecs.id}"
   instance_type               = "${var.ecs_cluster_instance_type}"

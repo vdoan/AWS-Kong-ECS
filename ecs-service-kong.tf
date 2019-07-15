@@ -1,6 +1,6 @@
 # ECS Service & Task Definition
 module "ecs_task_iam" {
-  source                      = "modules/ecs_task_iam"
+  source                      = "./modules/ecs_task_iam"
   account_id                  = "${data.aws_caller_identity.current.account_id}"
   region                      = "${var.region}"
   ssm_parameter_name_prefix   = "${var.ssm_parameter_name_prefix}"
@@ -91,7 +91,6 @@ resource "aws_service_discovery_service" "kong" {
       ttl = 10
       type = "A"
     }
-    routing_policy = "MULTIVALUE"
   }
 
   health_check_custom_config {

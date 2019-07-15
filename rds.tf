@@ -35,7 +35,7 @@ resource "aws_db_parameter_group" "main" {
 }
 
 module "rds" {
-  source                    = "modules/rds"
+  source                    = "terraform-aws-modules/rds/aws"
   identifier                = "${lower(var.app_name)}"  # rds identifier must be lowercase
   name                      = "${var.app_name}"
 
@@ -57,7 +57,6 @@ module "rds" {
 
   parameter_group_name      = "${var.db_engine}"
 
-  name                      = "${var.db_name}"
   username                  = "${var.db_username}"
   password                  = "${var.db_password}"
 }
