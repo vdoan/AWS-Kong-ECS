@@ -4,28 +4,21 @@ Deploy [Kong](https://konghq.com/kong-community-edition/) to AWS, with RDS (Post
 
 ![Architecture](doc/img/architecture.png)
 
-Note: Service Discovery currently uses [ECS Service Discovery](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-discovery.html), which is currently only available in the following regions:
+Note: Service Discovery currently uses [ECS Service Discovery](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-discovery.html)
 
-- US East (N. Virginia)	us-east-1
-- US East (Ohio)	us-east-2
-- US West (N. California)	us-west-1
-- US West (Oregon)	us-west-2
-- EU (Ireland)	eu-west-1
+# References:
+1. [Nick Doyle's Post on Medium](https://medium.com/@nick.p.doyle/deploying-kong-to-aws-elastic-container-service-with-terraform-9de83d7e21)
+2. [Nick Doyle's Repo on Bitbucket](https://bitbucket.org/nick_doyle/kong_aws_terraform/src/master/)
+3. [Terraform AWS Modules](https://github.com/terraform-aws-modules)
 
-![Kong](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp1iZGiJrx-zPtYghNjdn8yNjIHDsynMoX4ss6LKeMai1k1RDK)
-![Plus](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSni-KOe3lGmossBj8fiAN9k_yMRs3ueCcp81iSgdwndeuguTvzLQ)
-![AWS](https://amazonwebservices.gallerycdn.vsassets.io/extensions/amazonwebservices/aws-vsts-tools/1.0.21/1521739315168/Microsoft.VisualStudio.Services.Icons.Default)
-![Plus](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSni-KOe3lGmossBj8fiAN9k_yMRs3ueCcp81iSgdwndeuguTvzLQ)
-![Terraform](https://raw.githubusercontent.com/mauve/vscode-terraform/master/terraform.png)
 
 # Instructions
 
 1. Clone this repo
-1. Most TF modules included via git submodules: `git submodule init && git submodule update` to get them
-1. [Install terraform](https://www.terraform.io/intro/getting-started/install.html) (alternatively - [run terraform via docker](https://hub.docker.com/r/hashicorp/terraform/) - note they don't mention there to mount the directory with TF templates to the container, don't forget that)
-1. Update variables.tf according to your environment
-1. `terraform init`
-1. `terraform apply`
+2. [Install terraform](https://www.terraform.io/intro/getting-started/install.html) (alternatively - [run terraform via docker](https://hub.docker.com/r/hashicorp/terraform/) - note they don't mention there to mount the directory with TF templates to the container, don't forget that)
+3. Update variables.tf according to your environment
+4. `terraform init`
+5. `terraform apply`
 
 # Functionality
 
