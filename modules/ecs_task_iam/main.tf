@@ -31,6 +31,20 @@ data "template_file" "ecs_task_role_policy" {
       "Resource": "arn:aws:ssm:$${region}:$${account_id}:parameter$${ssm_parameter_name_prefix}/*"
     }
   ]
+},
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "rds-db:connect"
+      ],
+      "Resource": [
+        "arn:aws:rds-db:$${region}:$${account_id}:dbuser:${module.rds.this_db_instance_resource_id}/${var.db_username}"
+      ]
+    }
+  ]
 }
 EOF
   vars = {
