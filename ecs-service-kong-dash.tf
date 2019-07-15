@@ -44,7 +44,7 @@ resource "aws_ecs_service" "kong_dash" {
     container_name    = "${local.kong_dash_app_name}"
   }
   network_configuration {
-    subnets             = ["${module.vpc.private_subnets}"]
+    subnets             = "${module.vpc.private_subnets}"
     assign_public_ip    = false
     security_groups     = ["${aws_security_group.ecs_service_kong_dash.id}"]
   }

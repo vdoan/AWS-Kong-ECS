@@ -38,7 +38,7 @@ resource "aws_ecs_service" "nyan" {
     container_name    = "${local.app_name}"
   }
   network_configuration {
-    subnets             = ["${module.vpc.private_subnets}"]
+    subnets             = "${module.vpc.private_subnets}"
     assign_public_ip    = false
     security_groups     = ["${aws_security_group.ecs_service_nyan.id}"]
   }

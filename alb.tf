@@ -34,7 +34,7 @@ module "alb_sg" {
 
 resource "aws_alb" "main" {
   name              = "${var.app_name}-ALB"
-  subnets           = ["${module.vpc.public_subnets}"]
+  subnets           = "${module.vpc.public_subnets}"
   security_groups   = ["${module.alb_sg.this_security_group_id}"]
 }
 resource "aws_alb_listener" "http" {

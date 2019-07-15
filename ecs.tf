@@ -39,7 +39,7 @@ resource "aws_security_group" "all_from_bastion" {
 
 data "aws_ami" "ecs" {
   most_recent = true
-  owners      = ["self"]
+  owners      = ["amazon"]
   filter {
     name      = "owner-alias"
     values    = ["amazon"]
@@ -79,7 +79,7 @@ module "asg" {
   create_lc                   = true
   associate_public_ip_address = false
   iam_instance_profile        = "${module.ecs_cluster_iam.ecs_instance_profile_id}"
-  vpc_zone_identifier         = ["${module.vpc.private_subnets}"]
+  vpc_zone_identifier         = "${module.vpc.private_subnets}"
   user_data                   = "${data.template_file.ecs_user_data.rendered}"
 
   security_groups = [

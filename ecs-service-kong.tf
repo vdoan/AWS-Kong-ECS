@@ -4,6 +4,8 @@ module "ecs_task_iam" {
   account_id                  = "${data.aws_caller_identity.current.account_id}"
   region                      = "${var.region}"
   ssm_parameter_name_prefix   = "${var.ssm_parameter_name_prefix}"
+  dbi_resource_id             = "${module.rds.this_db_instance_resource_id}"
+  db_username                 = "${var.db_username}"
 }
 resource "aws_ecs_task_definition" "kong" {
   family                = "${var.app_name}"
@@ -74,7 +76,7 @@ resource "aws_ecs_service" "kong" {
     container_name    = "${var.app_name}"
   }
   network_configuration {
-    subnets             = ["${module.vpc.private_subnets}"]
+    subnets             = "${module.vpc.private_subnets}"
     assign_public_ip    = false
     security_groups     = ["${aws_security_group.ecs_service_kong.id}"]
   }
