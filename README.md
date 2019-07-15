@@ -15,7 +15,7 @@ Note: Service Discovery currently uses [ECS Service Discovery](https://docs.aws.
 # Instructions
 
 1. Clone this repo
-2. [Install terraform](https://www.terraform.io/intro/getting-started/install.html) (alternatively - [run terraform via docker](https://hub.docker.com/r/hashicorp/terraform/) - note they don't mention there to mount the directory with TF templates to the container, don't forget that)
+2. [Install terraform](https://www.terraform.io/intro/getting-started/install.html)
 3. Update variables.tf according to your environment
 4. `terraform init`
 5. `terraform apply`
