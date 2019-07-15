@@ -54,6 +54,7 @@ module "rds" {
   multi_az                  = false
   apply_immediately         = true
   skip_final_snapshot       = true
+  iam_database_authentication_enabled = true
 
   parameter_group_name      = "${var.db_engine}"
 

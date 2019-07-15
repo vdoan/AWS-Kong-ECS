@@ -5,7 +5,7 @@ variable "region" {
   default = "ap-southeast-2"
 }
 variable "ssh_key_name" {
-  default = "kong_bastion"
+  default = "kong_ec2_key"
 }
 
 # SSM
@@ -49,7 +49,7 @@ variable "db_engine" {
   default = "postgres"
 }
 variable "db_engine_version" {
-  default = "9.5"
+  default = "9.5.15"
 }
 variable "db_instance_class" {
   default = "db.t2.micro"

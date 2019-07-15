@@ -6,13 +6,12 @@ Deploy [Kong](https://konghq.com/kong-community-edition/) to AWS, with RDS (Post
 
 Note: Service Discovery currently uses [ECS Service Discovery](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-discovery.html)
 
-# References:
-1. [Nick Doyle's Post on Medium](https://medium.com/@nick.p.doyle/deploying-kong-to-aws-elastic-container-service-with-terraform-9de83d7e21)
-2. [Nick Doyle's Repo on Bitbucket](https://bitbucket.org/nick_doyle/kong_aws_terraform/src/master/)
-3. [Terraform AWS Modules](https://github.com/terraform-aws-modules)
+# Disclaimer
+Most of the code was done by [Nick Doyle](https://bitbucket.org/%7B5d0aaa3a-ab6b-4079-8249-6632d8831d28%7D/) I only cleaned up the code as it wasn't working with the latest Terraform version, removed git submodules because I hate them.
 
 
-# Instructions
+
+# Deployment Instructions
 
 1. Clone this repo
 2. [Install terraform](https://www.terraform.io/intro/getting-started/install.html)
@@ -66,7 +65,12 @@ The SSM parameter names are passed in as environment variables at 'docker run' t
 
 The parameters are set at terraform apply-time - see main.tf e.g. resource "aws_ssm_parameter" "db_username"
 
-My [docker image with Kong taking configuration from SSM parameter store is on DockerHub](https://hub.docker.com/r/rdkls/kong_ssm)
+The [docker image with Kong taking configuration from SSM parameter store is on DockerHub](https://hub.docker.com/r/rdkls/kong_ssm)
+
+## Kong Dashboard
+[Docker image for the task definition is on DockerHub](https://hub.docker.com/r/pgbi/kong-dashboard)
+
+This is the [Dashboard on Github](https://github.com/PGBI/kong-dashboard)
 
 ### Permissions
 
@@ -117,4 +121,9 @@ Major costs:
 - ALB
 
 ![Budget](doc/img/budget.png)
+
+# References:
+1. [Nick Doyle's Post on Medium](https://medium.com/@nick.p.doyle/deploying-kong-to-aws-elastic-container-service-with-terraform-9de83d7e21)
+2. [Nick Doyle's Repo on Bitbucket](https://bitbucket.org/nick_doyle/kong_aws_terraform/src/master/)
+3. [Terraform AWS Modules](https://github.com/terraform-aws-modules)
 
