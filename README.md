@@ -132,7 +132,7 @@ Major costs:
 # What I have Improved over the already existing code
 1. Removed git submodules
 2. Fixed syntax errors with the latest Terraform version
-3. 
+3. Fixed Tasks not sending logs to Cloudwatch
 
 
 # What I would have done if I had more time
