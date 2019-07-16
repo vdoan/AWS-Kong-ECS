@@ -40,6 +40,7 @@ module "rds" {
   name                      = "${var.app_name}"
 
   engine                    = "${var.db_engine}"
+  family                    = "${var.db_parameter_group_family}"
   engine_version            = "${var.db_engine_version}"
   port                      = "${var.db_port}"
 

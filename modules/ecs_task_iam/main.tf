@@ -18,11 +18,10 @@ resource "aws_iam_role" "ecs_task" {
 EOF
 }
 
-data "template_file" "ecs_task_role_policy" {
-  template   = <<EOF
+data "aws_iam_policy_document" "ecs_task_role_policy" {
 {
   "Version": "2012-10-17",
-  "Statement": [
+  "Statement": {
     {
       "Effect": "Allow",
       "Action": [
@@ -30,11 +29,11 @@ data "template_file" "ecs_task_role_policy" {
       ],
       "Resource": "arn:aws:ssm:$${region}:$${account_id}:parameter$${ssm_parameter_name_prefix}/*"
     }
-  ]
+  }
 },
 {
   "Version": "2012-10-17",
-  "Statement": [
+  "Statement": {
     {
       "Effect": "Allow",
       "Action": [
@@ -44,7 +43,7 @@ data "template_file" "ecs_task_role_policy" {
         "arn:aws:rds-db:$${region}:$${account_id}:dbuser:$${dbi_resource_id}/$${db_username}"
       ]
     }
-  ]
+  }
 }
 EOF
   vars = {

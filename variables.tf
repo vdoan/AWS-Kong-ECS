@@ -52,6 +52,9 @@ variable "db_engine" {
 variable "db_engine_version" {
   default = "9.5"
 }
+variable "db_parameter_group_family" {
+  default = "postgres9.5"
+}
 variable "db_instance_class" {
   default = "db.t2.micro"
 }
