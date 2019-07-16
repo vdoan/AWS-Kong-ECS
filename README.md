@@ -1,16 +1,32 @@
 # Overview
 
-Deploy [Kong](https://konghq.com/kong-community-edition/) to AWS, with RDS (Postgres), in highly-available multi-AZ and secure config
+Deploy [Kong](https://konghq.com/kong-community-edition/) to AWS, with RDS (Postgres)
 
 ![Architecture](doc/img/architecture.png)
 
 Note: Service Discovery currently uses [ECS Service Discovery](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-discovery.html)
 
-# Disclaimer
-The architecture of Kong on AWS ECS is fairly basic. I stumbled upon [this article](https://medium.com/@nick.p.doyle/deploying-kong-to-aws-elastic-container-service-with-terraform-9de83d7e21) by Nick Doyle while I was googling how to deploy Kong on AWS ECS. I thought it would be a good chance to learn terraform because I've never used it so far and it would be easier than using Cloudformation alone or Cloudformation with say Ansible and Make.
-Most of the code was done by [Nick Doyle](https://bitbucket.org/%7B5d0aaa3a-ab6b-4079-8249-6632d8831d28%7D/) I only cleaned up the code as it wasn't working with the latest Terraform version, removed git submodules because I hate them.
+# Disclaimer (How this code came to be)
+Once I received the code challenge, I started googling and found the architecture of Kong on AWS ECS is fairly basic. I stumbled upon [this article](https://medium.com/@nick.p.doyle/deploying-kong-to-aws-elastic-container-service-with-terraform-9de83d7e21) by Nick Doyle that explained how to deploy Kong on AWS ECS. I thought it would be a good chance to learn terraform because I've never used it so far and it would be easier than using Cloudformation alone or Cloudformation with say Ansible and Make.
+Most of the code was done by [Nick Doyle](https://bitbucket.org/%7B5d0aaa3a-ab6b-4079-8249-6632d8831d28%7D/) I forked the code or rather duplicated it because it was on bitbucket, thought it should just work (famous last words :D) anyway after cleaning up syntax conflicts with the current terraform version and fixing terraform validation errors, I found that the Kong service on ECS along with the Dashboard never worked so I decided to remove some of the elements of the architecture to simplify the task and be able to deliver in time since you guys emphasized "no gold plating" so here is what I did
+
+1. The Original author designed this so that the Kong container would lookup secrets from SSM during startup and since this wasn't working I removed SSM secrets and added them as env vars in the task definition directly
+2. The original solution had a postgresql RDS instance, this is also added complexity and takes a lot of time to provision and since Kong can be started in db-less mode I went ahead and removed this.
+3. Bastion hosts: Decided to remove bastion hosts because 
+   1. I can use session manager to login to ECS hosts directly
+   2. for the purpose of this code challenge it doesn't really prevent me from exposing Kong on the internet so tunneling through bastion isn't needed in the first place
+4. Kong Dashboard this is also not required in the challenge, would've been a nice to have if it worked out of the box
+
+# What I have Improved over the already existing code
+1. Removed git submodules
+2. Fixed syntax errors with the latest Terraform version
+3. Fixed Tasks not sending logs to Cloudwatch
 
 
+# What I would have done if I had more time
+1. Add Tag and Drain Lambdas to hookup ECS with Autoscaling properly to prevent service outages during autoscaling events
+2. Used IAM authentication for Kong's access to RDS instead of managing secrets
+3. Secure Access and lock everything down SG, no public access to Kong
 
 # Deployment Instructions
 
@@ -129,14 +145,4 @@ Major costs:
 2. [Nick Doyle's Repo on Bitbucket](https://bitbucket.org/nick_doyle/kong_aws_terraform/src/master/)
 3. [Terraform AWS Modules](https://github.com/terraform-aws-modules)
 
-# What I have Improved over the already existing code
-1. Removed git submodules
-2. Fixed syntax errors with the latest Terraform version
-3. Fixed Tasks not sending logs to Cloudwatch
 
-
-# What I would have done if I had more time
-1. Use AWS Session Manager and get rid of the bastion
-2. Add Tag and Drain Lambdas to hookup ECS with Autoscaling properly to prevent service outages during autoscaling events
-3. Used IAM authentication for Kong's access to RDS instead of managing secrets
-4. ECS is fucked, need to sort out the ecs cluster module and the roles for tasks and stuff everything is broken
