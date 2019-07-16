@@ -17,8 +17,9 @@ Most of the code was done by [Nick Doyle](https://bitbucket.org/%7B5d0aaa3a-ab6b
 1. Clone this repo
 2. [Install terraform](https://www.terraform.io/intro/getting-started/install.html)
 3. Update variables.tf according to your environment
-4. `terraform init`
-5. `terraform apply`
+4. Create an ssh key for bastion and ECS instances if it doesn't exist with the name you specify [here](https://github.com/mdesouky/AWS-Kong-ECS/blob/master/variables.tf#L7-L9)
+5. `terraform init`
+6. `terraform apply`
 
 # Functionality
 

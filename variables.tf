@@ -26,7 +26,8 @@ variable "ecs_cluster_instance_type" {
   default = "m5.xlarge"
 }
 variable "app_image" {
-  default = "rdkls/kong_ssm:latest"
+  #default = "rdkls/kong_ssm:latest"
+  default = "kong:latest"
 }
 variable "ecs_service_desired_count" {
   default = 1
@@ -49,7 +50,7 @@ variable "db_engine" {
   default = "postgres"
 }
 variable "db_engine_version" {
-  default = "9.5.15"
+  default = "9.5"
 }
 variable "db_instance_class" {
   default = "db.t2.micro"
