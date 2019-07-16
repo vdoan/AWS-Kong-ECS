@@ -48,12 +48,6 @@ resource "aws_iam_policy_attachment" "ecs_task_execution_role_policy" {
     policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 # Kong ECS Service & Task Definition
-module "ecs_task_iam" {
-  source                      = "./modules/ecs_task_iam"
-  account_id                  = "${data.aws_caller_identity.current.account_id}"
-  region                      = "${var.region}"
-  ssm_parameter_name_prefix   = "${var.ssm_parameter_name_prefix}"
-}
 resource "aws_ecs_task_definition" "kong" {
   family                = "${var.app_name}"
   task_role_arn         = "${aws_iam_role.ecs_task.arn}"
