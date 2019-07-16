@@ -4,8 +4,6 @@ module "ecs_task_iam" {
   account_id                  = "${data.aws_caller_identity.current.account_id}"
   region                      = "${var.region}"
   ssm_parameter_name_prefix   = "${var.ssm_parameter_name_prefix}"
-  dbi_resource_id             = "${module.rds.this_db_instance_resource_id}"
-  db_username                 = "${var.db_username}"
 }
 resource "aws_ecs_task_definition" "kong" {
   family                = "${var.app_name}"

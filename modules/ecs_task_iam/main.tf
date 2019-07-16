@@ -30,17 +30,6 @@ data "aws_iam_policy_document" "ecs_task_role_policy" {
       "arn:aws:ssm:${var.region}:${var.account_id}:parameter${var.ssm_parameter_name_prefix}/*",
     ]
   }
-
-  statement {
-    sid = "3"
-    actions = [
-      "rds-db:connect",
-    ]
-
-    resources = [
-      "arn:aws:rds-db:${var.region}:${var.account_id}:dbuser:${var.dbi_resource_id}/${var.db_username}",
-    ]
-  }
 }
 resource "aws_iam_policy" "ecs_task_policy" {
   name      = "ecs_task_role_policy"
