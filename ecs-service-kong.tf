@@ -80,20 +80,24 @@ resource "aws_ecs_task_definition" "kong" {
         "value" : "0.0.0.0:${var.kong_port_admin}"
       },
       {
-        "name"  : "SSM_PARAMETER_NAME_DB_USERNAME",
-        "value" : "${local.ssm_parameter_name_db_username}"
+        "name"  : "KONG_DATABASE",
+        "value" : "off"
       },
       {
-        "name"  : "SSM_PARAMETER_NAME_DB_PASSWORD",
-        "value" : "${local.ssm_parameter_name_db_password}"
+        "name"  : "KONG_PROXY_ACCESS_LOG",
+        "value" : "/dev/stdout"
       },
       {
-        "name"  : "SSM_PARAMETER_NAME_DB_ENGINE",
-        "value" : "${local.ssm_parameter_name_db_engine}"
+        "name"  : "KONG_ADMIN_ACCESS_LOG",
+        "value" : "/dev/stdout"
       },
       {
-        "name"  : "SSM_PARAMETER_NAME_DB_HOST",
-        "value" : "${local.ssm_parameter_name_db_host}"
+        "name"  : "KONG_PROXY_ERROR_LOG",
+        "value" : "/dev/stderr"
+      },
+      {
+        "name"  : "KONG_ADMIN_ERROR_LOG",
+        "value" : "/dev/stderr"
       }
     ]
   }

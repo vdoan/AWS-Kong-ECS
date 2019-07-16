@@ -27,6 +27,7 @@ Most of the code was done by [Nick Doyle](https://bitbucket.org/%7B5d0aaa3a-ab6b
 1. Add Tag and Drain Lambdas to hookup ECS with Autoscaling properly to prevent service outages during autoscaling events
 2. Used IAM authentication for Kong's access to RDS instead of managing secrets
 3. Secure Access and lock everything down SG, no public access to Kong
+4. clean up the code and use modules more
 
 # Deployment Instructions
 

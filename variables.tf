@@ -7,18 +7,6 @@ variable "region" {
 variable "ssh_key_name" {
   default = "kong_ec2_key"
 }
-
-# SSM
-variable "ssm_parameter_name_prefix" {
-  description = "prefix (like path) under which to store SSM parameters"
-  default = "/dev/kong"
-}
-locals {
-  ssm_parameter_name_db_username = "${var.ssm_parameter_name_prefix}/db_username"
-  ssm_parameter_name_db_password = "${var.ssm_parameter_name_prefix}/db_password"
-  ssm_parameter_name_db_engine = "${var.ssm_parameter_name_prefix}/db_engine"
-  ssm_parameter_name_db_host = "${var.ssm_parameter_name_prefix}/db_host"
-}
  
  # ECS
 variable "ecs_cluster_instance_type" {
@@ -26,7 +14,8 @@ variable "ecs_cluster_instance_type" {
   default = "m5.xlarge"
 }
 variable "app_image" {
-  default = "rdkls/kong_ssm:latest"
+  #default = "rdkls/kong_ssm:latest"
+  default = "kong:latest"
 }
 variable "ecs_service_desired_count" {
   default = 1
