@@ -132,9 +132,11 @@ Major costs:
 # What I have Improved over the already existing code
 1. Removed git submodules
 2. Fixed syntax errors with the latest Terraform version
+3. 
 
 
 # What I would have done if I had more time
 1. Use AWS Session Manager and get rid of the bastion
 2. Add Tag and Drain Lambdas to hookup ECS with Autoscaling properly to prevent service outages during autoscaling events
-3. 
+3. Used IAM authentication for Kong's access to RDS instead of managing secrets
+4. ECS is fucked, need to sort out the ecs cluster module and the roles for tasks and stuff everything is broken
