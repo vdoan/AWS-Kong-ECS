@@ -42,12 +42,6 @@ resource "aws_iam_role_policy_attachment" "ecs_task_role_policy_attachment" {
   policy_arn = "${aws_iam_policy.ecs_task_policy.arn}"
 }
 
-resource "aws_iam_policy_attachment" "ecs_services_policy" {
-    name = "ecs_services_policy-attachment"
-    roles = ["${aws_iam_role.ecs_task.name}"]
-    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole"
-}
-
 resource "aws_iam_policy_attachment" "ecs_task_execution_role_policy" {
     name = "ecs_task_execution_role_policy-attachment"
     roles = ["${aws_iam_role.ecs_task.name}"]
@@ -62,7 +56,8 @@ module "ecs_task_iam" {
 }
 resource "aws_ecs_task_definition" "kong" {
   family                = "${var.app_name}"
-  task_role_arn         = "${module.ecs_task_iam.arn}"
+  task_role_arn         = "${aws_iam_role.ecs_task.arn}"
+  execution_role_arn    = "${aws_iam_role.ecs_task.arn}"
   network_mode          = "awsvpc"
   container_definitions = <<EOF
 [
