@@ -57,12 +57,18 @@ EOF
 }
 
 
-# Attaching AmazonSSMManagedInstanceCore Policy to the ecs_container_instance role so 
+# Attaching AmazonSSMManagedInstanceCore and AmazonEC2RoleforSSM Policy to the ecs_container_instance role so 
 # the ECS instances can be accessed using session manager
 resource "aws_iam_policy_attachment" "ecs_task_execution_role_policy" {
     name = "ecs_instance_session_manager_policy-attachment"
     roles = ["${aws_iam_role.ecs_container_instance.name}"]
     policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_policy_attachment" "ecs_task_execution_role_policy-2" {
+    name = "ecs_instance_session_manager_policy-attachment-2"
+    roles = ["${aws_iam_role.ecs_container_instance.name}"]
+    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
 

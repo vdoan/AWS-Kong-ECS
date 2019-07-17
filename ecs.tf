@@ -50,6 +50,10 @@ ECS_ENABLE_TASK_ENI=true
 ECS_DISABLE_PRIVILEGED=false
 ECS_AWSVPC_BLOCK_IMDS=false
 EOF_CONFIG
+
+cd /tmp
+sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+sudo systemctl start amazon-ssm-agent
 EOF
 }
 resource "aws_ecs_cluster" "main" {
