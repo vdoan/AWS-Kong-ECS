@@ -56,6 +56,16 @@ EOF
   role     = "${aws_iam_role.ecs_container_instance.id}"
 }
 
+
+# Attaching AmazonSSMManagedInstanceCore Policy to the ecs_container_instance role so 
+# the ECS instances can be accessed using session manager
+resource "aws_iam_policy_attachment" "ecs_task_execution_role_policy" {
+    name = "ecs_instance_session_manager_policy-attachment"
+    roles = ["${aws_iam_role.ecs_container_instance.name}"]
+    policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+
 # Instance profile for this role - to be attached to ECS instances
 resource "aws_iam_instance_profile" "ecs" {
   name = "ecs-container-instance-profile"
