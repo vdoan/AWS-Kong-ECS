@@ -32,6 +32,7 @@ Most of the code was done by [Nick Doyle](https://bitbucket.org/%7B5d0aaa3a-ab6b
 4. Secure Access and lock everything down SG, no public access to Kong
 5. clean up the code and use modules more
 6. Added a simple Makefile to build and push the container image
+7. Mount a Volume for Kong since it's in db-less mode
 
 # Deployment Instructions
 
