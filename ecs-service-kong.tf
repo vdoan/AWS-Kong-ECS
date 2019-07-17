@@ -38,6 +38,10 @@ resource "aws_ecs_task_definition" "kong" {
   task_role_arn         = "${aws_iam_role.ecs_task.arn}"
   execution_role_arn    = "${aws_iam_role.ecs_task.arn}"
   network_mode          = "awsvpc"
+  volume {
+    name      = "kong-vol"
+    host_path = "/ecs/kong-vol"
+  }
   container_definitions = <<EOF
 [
   {
@@ -52,25 +56,36 @@ resource "aws_ecs_task_definition" "kong" {
         "awslogs-stream-prefix": "kong-ecs"
       }
     },
+    "mountPoints": [
+                {
+                    "sourceVolume": "kong-vol",
+                    "containerPath": "/usr/local/kong/declarative",
+                    "readOnly": false
+                }
+    ],
     "memoryReservation": ${var.container_memory_reservation},
     "portMappings": [
       {
-        "ContainerPort": ${var.kong_port_http},
-        "hostPort": ${var.kong_port_http}
+        "ContainerPort": 8000,
+        "hostPort": 8000
       },
       {
-        "ContainerPort": ${var.kong_port_https},
-        "hostPort": ${var.kong_port_https}
+        "ContainerPort": 8001,
+        "hostPort": 8001
       },
       {
-        "ContainerPort": ${var.kong_port_admin},
-        "hostPort": ${var.kong_port_admin}
+        "ContainerPort": 8443,
+        "hostPort": 8443
+      },
+      {
+        "ContainerPort": 8444,
+        "hostPort": 8444
       }
     ],
     "environment": [
       {
         "name"  : "KONG_ADMIN_LISTEN",
-        "value" : "0.0.0.0:${var.kong_port_admin}"
+        "value" : "0.0.0.0:8001, 0.0.0.0:8444 ssl"
       },
       {
         "name"  : "KONG_DATABASE",
@@ -111,12 +126,12 @@ resource "aws_ecs_service" "kong" {
   cluster             = "${aws_ecs_cluster.main.id}"
   task_definition     = "${aws_ecs_task_definition.kong.arn}"
   desired_count       = "${var.ecs_service_desired_count}"
-  scheduling_strategy = "DAEMON"
+  scheduling_strategy = "REPLICA"
 
   load_balancer {
     target_group_arn  = "${aws_alb_target_group.main.id}"
     container_name    = "${var.app_name}"
-    container_port    = "${var.kong_port_http}"
+    container_port    = "8000"
   }
   service_registries {
     registry_arn      = "${aws_service_discovery_service.kong.arn}"

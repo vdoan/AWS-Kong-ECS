@@ -21,14 +21,3 @@ variable "ecs_service_desired_count" {
 variable "container_memory_reservation" {
   default = 64
 }
-
-# Kong
-variable "kong_port_admin" {
-  default = "8001"
-}
-variable "kong_port_http" {
-  default = 8000
-}
-variable "kong_port_https" {
-  default = 8443
-}

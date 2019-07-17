@@ -49,7 +49,7 @@ resource "aws_ecs_service" "nyan" {
   cluster             = "${aws_ecs_cluster.main.id}"
   task_definition     = "${aws_ecs_task_definition.nyan.arn}"
   desired_count       = "${var.ecs_service_desired_count}"
-  scheduling_strategy = "DAEMON"
+  scheduling_strategy = "REPLICA"
 
   service_registries {
     registry_arn      = "${aws_service_discovery_service.nyan.arn}"
