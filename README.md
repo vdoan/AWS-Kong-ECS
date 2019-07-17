@@ -31,6 +31,7 @@ Most of the code was done by [Nick Doyle](https://bitbucket.org/%7B5d0aaa3a-ab6b
 3. Used IAM authentication for Kong's access to RDS instead of managing secrets
 4. Secure Access and lock everything down SG, no public access to Kong
 5. clean up the code and use modules more
+6. Added a simple Makefile to build and push the container image
 
 # Deployment Instructions
 

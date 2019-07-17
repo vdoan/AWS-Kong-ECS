@@ -10,7 +10,7 @@ variable "ssh_key_name" {
  
  # ECS
 variable "ecs_cluster_instance_type" {
-  default = "t2.micro"
+  default = "m5.xlarge"
 }
 variable "app_image" {
   default = "mdesouky/kong:latest"
