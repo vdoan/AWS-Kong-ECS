@@ -56,15 +56,15 @@ resource "aws_ecs_task_definition" "kong" {
     "portMappings": [
       {
         "ContainerPort": ${var.kong_port_http},
-        "Protocol": "tcp"
+        "hostPort": ${var.kong_port_http}
       },
       {
         "ContainerPort": ${var.kong_port_https},
-        "Protocol": "tcp"
+        "hostPort": ${var.kong_port_https}
       },
       {
         "ContainerPort": ${var.kong_port_admin},
-        "Protocol": "tcp"
+        "hostPort": ${var.kong_port_admin}
       }
     ],
     "environment": [

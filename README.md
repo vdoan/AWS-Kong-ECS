@@ -33,6 +33,7 @@ Most of the code was done by [Nick Doyle](https://bitbucket.org/%7B5d0aaa3a-ab6b
 5. clean up the code and use modules more
 6. Added a simple Makefile to build and push the container image
 7. Mount a Volume for Kong since it's in db-less mode
+8. Test Curl commands on the admin API, still fiddling with ports and haven't found a fix
 
 # Deployment Instructions
 
