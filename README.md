@@ -56,7 +56,7 @@ Most of the code was done by [Nick Doyle](https://bitbucket.org/%7B5d0aaa3a-ab6b
 
 ### Registry & Source
 
-The container is hosted on [Docker Hub](https://hub.docker.com/r/mdesouky/kong), and the source on [Github](https://bitbucket.org/nick_doyle/docker_kong_ssm/)
+The container is hosted on [Docker Hub](https://hub.docker.com/r/mdesouky/kong), and the source on [Github](https://github.com/mdesouky/AWS-Kong-ECS/blob/master/Dockerfile)
 
 ## Done
 
