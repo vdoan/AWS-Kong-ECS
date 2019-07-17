@@ -2,7 +2,6 @@
 
 Deploy [Kong](https://konghq.com/kong-community-edition/) to AWS, with RDS (Postgres)
 
-![Architecture](doc/img/architecture.png)
 
 Note: Service Discovery currently uses [ECS Service Discovery](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-discovery.html)
 

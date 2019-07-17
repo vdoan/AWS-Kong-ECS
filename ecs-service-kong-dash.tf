@@ -66,15 +66,6 @@ resource "aws_security_group" "ecs_service_kong_dash" {
   name        = "${var.app_name}-ECS-SG-${local.kong_dash_app_name}"
   vpc_id      = "${module.vpc.vpc_id}"
 
-  ingress {
-    description       = "all from bastion"
-    from_port         = 0
-    to_port           = 0
-    protocol          = "-1"
-    security_groups   = [
-      "${aws_security_group.bastion.id}"
-    ]
-  }
   egress {
     description = "all outbound"
     from_port   = 0

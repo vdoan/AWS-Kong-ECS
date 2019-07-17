@@ -67,8 +67,7 @@ resource "aws_security_group" "ecs_service_nyan" {
     to_port           = 0
     protocol          = "-1"
     security_groups   = [
-      "${aws_security_group.bastion.id}",
-      "${aws_security_group.ecs_service_kong.id}"
+      "${aws_security_group.ecs_service_kong.id}",
     ]
   }
   egress  {

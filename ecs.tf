@@ -24,18 +24,6 @@ resource "aws_security_group" "ecs_sg" {
       
     
 }
-resource "aws_security_group" "all_from_bastion" {
-  name        = "${var.app_name}-From-Bastion-SG"
-  vpc_id      = "${module.vpc.vpc_id}"
-
-  ingress  {
-    description       = "all from bastion"
-    from_port         = 0
-    to_port           = 0
-    protocol          = "-1"
-    security_groups   = ["${aws_security_group.bastion.id}"]
-  }
-}
 
 data "aws_ami" "ecs" {
   most_recent = true
@@ -49,8 +37,8 @@ data "aws_ami" "ecs" {
     values    = ["amzn-ami-*-amazon-ecs-optimized"]
   }
 }
-module "ecs_cluster_iam" {
-  source = "./modules/ecs_cluster_iam"
+module "ecs_instance_profile" {
+  source = "./modules/ecs_instance_profile"
 }
 data "template_file" "ecs_user_data" {
   template = <<EOF
@@ -78,13 +66,12 @@ module "asg" {
   lc_name                     = "${var.app_name}-ECS-LC"
   create_lc                   = true
   associate_public_ip_address = false
-  iam_instance_profile        = "${module.ecs_cluster_iam.ecs_instance_profile_id}"
+  iam_instance_profile        = "${module.ecs_instance_profile.ecs_instance_profile_id}"
   vpc_zone_identifier         = "${module.vpc.private_subnets}"
   user_data                   = "${data.template_file.ecs_user_data.rendered}"
 
   security_groups = [
     "${aws_security_group.ecs_sg.id}",
-    "${aws_security_group.all_from_bastion.id}"
   ]
 
   # Auto scaling group

@@ -18,30 +18,6 @@ resource "aws_iam_role" "ecs_task" {
 EOF
 }
 
-data "aws_iam_policy_document" "ecs_task_role_policy" {
-  
-  statement {
-    sid = "2"
-    actions = [
-      "ssm:GetParameter",
-    ]
-
-    resources = [
-      "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter${var.ssm_parameter_name_prefix}/*",
-    ]
-  }
-}
-resource "aws_iam_policy" "ecs_task_policy" {
-  name      = "ecs_task_role_policy"
-  path      = "/"
-  policy    = "${data.aws_iam_policy_document.ecs_task_role_policy.json}"
-}
-
-resource "aws_iam_role_policy_attachment" "ecs_task_role_policy_attachment" {
-  role       = "${aws_iam_role.ecs_task.name}"
-  policy_arn = "${aws_iam_policy.ecs_task_policy.arn}"
-}
-
 resource "aws_iam_policy_attachment" "ecs_task_execution_role_policy" {
     name = "ecs_task_execution_role_policy-attachment"
     roles = ["${aws_iam_role.ecs_task.name}"]
@@ -156,7 +132,6 @@ resource "aws_security_group" "ecs_service_kong" {
     protocol          = "-1"
     security_groups   = [
       "${module.alb_sg.this_security_group_id}",
-      "${aws_security_group.bastion.id}",
       "${aws_security_group.ecs_service_kong_dash.id}"
     ]
     self              = true
