@@ -16,6 +16,8 @@ Most of the code was done by [Nick Doyle](https://bitbucket.org/%7B5d0aaa3a-ab6b
    2. for the purpose of this code challenge it doesn't really prevent me from exposing Kong on the internet so tunneling through bastion isn't needed in the first place
 4. Kong Dashboard this is also not required in the challenge, would've been a nice to have if it worked out of the box
 
+![Architecture](doc/img/architecture.png)
+
 # What I have Improved over the already existing code
 1. Removed git submodules
 2. Fixed syntax errors with the latest Terraform version
