@@ -23,6 +23,15 @@ resource "aws_iam_policy_attachment" "ecs_task_execution_role_policy" {
     roles = ["${aws_iam_role.ecs_task.name}"]
     policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
+# Cloudwatch
+resource "aws_cloudwatch_log_group" "kong" {
+  name = "kong"
+
+  tags = {
+    Environment = "dev"
+    Application = "kong"
+  }
+}
 # Kong ECS Service & Task Definition
 resource "aws_ecs_task_definition" "kong" {
   family                = "${var.app_name}"
@@ -35,6 +44,14 @@ resource "aws_ecs_task_definition" "kong" {
     "name": "${var.app_name}",
     "container_name": "${var.app_name}",
     "image": "${var.app_image}",
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-region": "${var.region}",
+        "awslogs-group": "${aws_cloudwatch_log_group.kong.name}",
+        "awslogs-stream-prefix": "kong-ecs"
+      }
+    },
     "memoryReservation": ${var.container_memory_reservation},
     "portMappings": [
       {
@@ -74,6 +91,10 @@ resource "aws_ecs_task_definition" "kong" {
       {
         "name"  : "KONG_ADMIN_ERROR_LOG",
         "value" : "/dev/stderr"
+      },
+      {
+        "name"  : "KONG_DECLARATIVE_CONFIG",
+        "value" : "/usr/local/kong/declarative/kong.yml"
       }
     ]
   }
