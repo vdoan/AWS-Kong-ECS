@@ -4,9 +4,19 @@ locals {
   app_name      = "nyan"
   port_http     = 80
 }
+# Cloudwatch
+resource "aws_cloudwatch_log_group" "nyan" {
+  name = "nyan"
 
+  tags = {
+    Environment = "dev"
+    Application = "nyan"
+  }
+}
 resource "aws_ecs_task_definition" "nyan" {
   family                = "${local.app_name}"
+  task_role_arn         = "${aws_iam_role.ecs_task.arn}"
+  execution_role_arn    = "${aws_iam_role.ecs_task.arn}"
   network_mode          = "awsvpc"
   container_definitions = <<EOF
 [
@@ -14,6 +24,14 @@ resource "aws_ecs_task_definition" "nyan" {
     "name": "${local.app_name}",
     "container_name": "${local.app_name}",
     "image": "${local.app_image}",
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-region": "${var.region}",
+        "awslogs-group": "${aws_cloudwatch_log_group.nyan.name}",
+        "awslogs-stream-prefix": "nyan-ecs"
+      }
+    },
     "memoryReservation": ${var.container_memory_reservation},
     "portMappings": [
       {

@@ -15,7 +15,7 @@ variable "ecs_cluster_instance_type" {
 }
 variable "app_image" {
   #default = "rdkls/kong_ssm:latest"
-  default = "kong:latest"
+  default = "mdesouky/kong:latest"
 }
 variable "ecs_service_desired_count" {
   default = 1

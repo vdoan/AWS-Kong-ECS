@@ -95,6 +95,10 @@ resource "aws_ecs_task_definition" "kong" {
       {
         "name"  : "KONG_DECLARATIVE_CONFIG",
         "value" : "/usr/local/kong/declarative/kong.yml"
+      },
+      {
+        "name"  : "KONG_LOG_LEVEL",
+        "value" : "debug"
       }
     ]
   }
@@ -147,13 +151,12 @@ resource "aws_security_group" "ecs_service_kong" {
   vpc_id      = "${module.vpc.vpc_id}"
 
   ingress  {
-    description       = "all from self + alb + bastion + kong dash"
+    description       = "all from self + alb "
     from_port         = 0
     to_port           = 0
     protocol          = "-1"
     security_groups   = [
       "${module.alb_sg.this_security_group_id}",
-      "${aws_security_group.ecs_service_kong_dash.id}"
     ]
     self              = true
   }
