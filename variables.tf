@@ -1,5 +1,5 @@
 variable "app_name" {
-  default = "mdesouky/kong:latest"
+  default = "Kong"
 }
 variable "region" {
   default = "ap-southeast-2"
