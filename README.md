@@ -1,9 +1,8 @@
 # Overview
 
-Deploy [Kong](https://konghq.com/kong-community-edition/) to AWS, with RDS (Postgres)
+Deploy [Kong](https://konghq.com/kong-community-edition/) to AWS in DB-less mode (no postgresql and no cassandra)
 
 
-Note: Service Discovery currently uses [ECS Service Discovery](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-discovery.html)
 
 # Disclaimer (How this code came to be)
 Once I received the code challenge, I started googling and found the architecture of Kong on AWS ECS is fairly basic. I stumbled upon [this article](https://medium.com/@nick.p.doyle/deploying-kong-to-aws-elastic-container-service-with-terraform-9de83d7e21) by [Nick Doyle](https://bitbucket.org/%7B5d0aaa3a-ab6b-4079-8249-6632d8831d28%7D/) that explained how to deploy Kong on AWS ECS. I thought it would be a good chance to learn terraform because I've never used it so far and it would be easier than using Cloudformation alone or Cloudformation with say Ansible and Make.
@@ -41,6 +40,7 @@ Most of the code was done by [Nick Doyle](https://bitbucket.org/%7B5d0aaa3a-ab6b
    1. If I create the file on the container and get a host directory or a docker volume mounted on that directory inside the container the file goes away which is the way linux volume mounting works
    2. If I create the file on the container and get the entry point script to copy it over to the mount point inside the container which supposedly would've been created before the container started it doesn't work
    3. If I create a mount point on the ecs host and create the file in it using the  instance/LC userdata and then mount that mountpoint to the target one inside the kong container using the task definition, this also doesn't work.
+2. Enrolling an API in kong
 
 
 # Deployment Instructions
