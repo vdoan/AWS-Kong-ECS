@@ -54,9 +54,9 @@ EOF_CONFIG
 sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
 sudo systemctl start amazon-ssm-agent
 
-cat << EOF_KONG_CONFIG > /tmp/kong.yml
+cat > /tmp/kong.yml<<'_END'
 _format_version: "1.1"
-EOF_KONG_CONFIG
+_END
 
 EOF
 }
