@@ -34,6 +34,7 @@ Most of the code was done by [Nick Doyle](https://bitbucket.org/%7B5d0aaa3a-ab6b
 6. Added a simple Makefile to build and push the container image
 7. Mount a Volume for Kong since it's in db-less mode
 8. Test Curl commands on the admin API, still fiddling with ports and haven't found a fix
+9. Actually enroll an API in Kong
 
 # What I've failed at so far
 1. Get Kong to start in DB-less mode with both a mounted volume and a config file, can only do one of those atm
