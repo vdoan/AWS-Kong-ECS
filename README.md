@@ -35,6 +35,13 @@ Most of the code was done by [Nick Doyle](https://bitbucket.org/%7B5d0aaa3a-ab6b
 7. Mount a Volume for Kong since it's in db-less mode
 8. Test Curl commands on the admin API, still fiddling with ports and haven't found a fix
 
+# What I've failed at so far
+1. Get Kong to start in DB-less mode with both a mounted volume and a config file, can only do one of those atm
+   1. If I create the file on the container and get a host directory or a docker volume mounted on that directory inside the container the file goes away which is the way linux volume mounting works
+   2. If I create the file on the container and get the entry point script to copy it over to the mount point inside the container which supposedly would've been created before the container started it doesn't work
+   3. If I create a mount point on the ecs host and create the file in it using the  instance/LC userdata and then mount that mountpoint to the target one inside the kong container using the task definition, this also doesn't work.
+
+
 # Deployment Instructions
 
 1. Clone this repo

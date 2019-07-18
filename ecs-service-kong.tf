@@ -38,10 +38,7 @@ resource "aws_ecs_task_definition" "kong" {
   task_role_arn         = "${aws_iam_role.ecs_task.arn}"
   execution_role_arn    = "${aws_iam_role.ecs_task.arn}"
   network_mode          = "awsvpc"
-  volume {
-    name      = "kong-vol"
-    host_path = "/ecs/kong-vol"
-  }
+
   container_definitions = <<EOF
 [
   {
@@ -56,13 +53,6 @@ resource "aws_ecs_task_definition" "kong" {
         "awslogs-stream-prefix": "kong-ecs"
       }
     },
-    "mountPoints": [
-                {
-                    "sourceVolume": "kong-vol",
-                    "containerPath": "/usr/local/kong/declarative",
-                    "readOnly": false
-                }
-    ],
     "memoryReservation": ${var.container_memory_reservation},
     "portMappings": [
       {
